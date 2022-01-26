@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body>
+	<h1>ROZGRYWKA<h1>
+		<p>{{partia.gracze[aktywny_gracz].nazwa}}</p>
+		
+	<table border: "solid black">	
+		<tr>
+			<th>Sklep talia</th>
+		</tr>
+		<tr>
+			<td>{{partia.sklep_talia}}</td>
+		</tr>
+		<tr>
+			<th>Skelp wystawione</th>
+		</tr>		
+		<tr>
+			<form action="{{url_for('plansza')}}" method="post">
+				<td>
+				{% for karta in partia.sklep_wystawione %}
+					<input type="checkbox" name="karta" value="{{loop.index0}}">
+					<label for="id_{{karta}}">{{loop.index0}} {{karta}}</label>
+				{% endfor%}
+				</td>
+			<input type="submit" name="action" value="KUP">
+			</form>
+		</tr>	
+	</table>	
+	<h2>GRACZE<h2>
+	<table>
+		{% for gracz in partia.gracze %}
+		<tr>
+			<th>Nazwa</th>
+			<th>Talia kart osobistych</th>
+			<th>Reka</th>
+			<th>Talia kart odrzuconych</th>
+		</tr>
+		<tr>
+			<td>{{gracz.nazwa}}</td>
+			<td>{{gracz.talia}}</td>
+			<td>{{gracz.reka}}</td>
+			<td>{{gracz.odrzucone}}</td>
+			
+		</tr>
+		{% endfor%}
+		
+	</table>
+		{% for row in result_monety%}
+		<tr>
+			<td>{{row}}</td>
+		</tr>
+		{% endfor%}
+	<form action="{{url_for('plansza')}}" method="post">
+		<input type="submit" name="action" value="Wyloz karty">
+	</form>
+	<form action="{{url_for('plansza')}}" method="post">
+		<input type="submit" name="action" value="Zakoncz ture">
+	</form>
+	
+	<form action="{{url_for('cards')}}" method="get">
+		<input type="submit" name="action" value="Pokarz karty">
+	</form>
+	
+	</body>
+</html>
