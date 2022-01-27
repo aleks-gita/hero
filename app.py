@@ -120,7 +120,13 @@ class Gracz:
                 self.odrzucone.append(x)
 
     def sumuj_monety(self):
-        pass
+        karty=result2
+        if self.reka in karty:
+                print('karty')
+        #for i in karty:
+        #    monety = result_monety
+       # print(monety)
+        #print(karty)
 
 
 # wyciagniecie metody sprzedawania z Partia
