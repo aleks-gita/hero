@@ -20,7 +20,7 @@
 -- Struktura tabeli dla tabeli `Hero_1`
 --
 
-CREATE TABLE `Hero_1` (
+CREATE TABLE 'Hero_1' (
   `ID` int(11) NOT NULL,
   `Nazwa` varchar(20) NOT NULL,
   `Kolor` varchar(20) DEFAULT NULL,
@@ -30,12 +30,10 @@ CREATE TABLE `Hero_1` (
   `Zdrowie` int(11) DEFAULT NULL,
   `Inne_zdolnosci` varchar(50) DEFAULT NULL,
   `Zdjecie` varchar(50) DEFAULT NULL
-) 
---
--- Zrzut danych tabeli `Hero_1`
---
+); 
 
-INSERT INTO `Hero_1` (`ID`, `Nazwa`, `Kolor`, `Cena`, `Monety`, `Atak`, `Zdrowie`, `Inne_zdolnosci`, `Zdjecie`) VALUES
+
+INSERT INTO 'Hero_1' (`ID`, `Nazwa`, `Kolor`, `Cena`, `Monety`, `Atak`, `Zdrowie`, `Inne_zdolnosci`, `Zdjecie`) VALUES
 (1, 'Ork Grabiezca', 'Zielony', 3, 0, 2, 0, NULL, NULL),
 (2, 'Wilkor', 'Zielony', 5, 0, 3, 0, NULL, NULL),
 (3, 'Wilczy Szaman', 'Zielony', 2, 0, 2, 0, '+1 ataku za kazda inna zielona karte', NULL),
@@ -89,7 +87,17 @@ INSERT INTO `Hero_1` (`ID`, `Nazwa`, `Kolor`, `Cena`, `Monety`, `Atak`, `Zdrowie
 (51, 'Opodatkowanie', 'Zloty', 1, 2, 0, 0, NULL, NULL),
 (52, 'Werbunek', 'Zloty', 2, 2, 0, 3, NULL, NULL),
 (53, 'Werbunek', 'Zloty', 2, 2, 0, 3, NULL, NULL),
-(54, 'Werbunek', 'Zloty', 2, 2, 0, 3, NULL, NULL);
+(54, 'Werbunek', 'Zloty', 2, 2, 0, 3, NULL, NULL),
+(55, 'Moneta-1', NULL, NULL, 1, 0, 0, NULL,'https://www.herorealms.com/wp-content/uploads/2017/09/BAS-EN-097-gold.jpg'),
+(56, 'Moneta-2', NULL, NULL, 1, 0, 0, NULL,'https://www.herorealms.com/wp-content/uploads/2017/09/BAS-EN-097-gold.jpg'),
+(57, 'Moneta-3', NULL, NULL, 1, 0, 0, NULL,'https://www.herorealms.com/wp-content/uploads/2017/09/BAS-EN-097-gold.jpg'),
+(58, 'Moneta-4', NULL, NULL, 1, 0, 0, NULL,'https://www.herorealms.com/wp-content/uploads/2017/09/BAS-EN-097-gold.jpg'),
+(59, 'Moneta-5', NULL, NULL, 1, 0, 0, NULL,'https://www.herorealms.com/wp-content/uploads/2017/09/BAS-EN-097-gold.jpg'),
+(60, 'Moneta-6', NULL, NULL, 1, 0, 0, NULL,'https://www.herorealms.com/wp-content/uploads/2017/09/BAS-EN-097-gold.jpg'),
+(61, 'Moneta-7', NULL, NULL, 1, 0, 0, NULL,'https://www.herorealms.com/wp-content/uploads/2017/09/BAS-EN-097-gold.jpg'),
+(62, 'Rubin', NULL, NULL, 2, 0, 0, NULL,'https://www.herorealms.com/wp-content/uploads/2017/09/BAS-EN-133-ruby.jpg'),
+(63, 'Krotki miecz', NULL, NULL, 0, 2, 0, NULL,'https://www.herorealms.com/wp-content/uploads/2017/09/BAS-EN-125-shortsword.jpg'),
+(64, 'Sztylet', NULL, NULL, 0, 1, 0, NULL,'https://www.herorealms.com/wp-content/uploads/2017/09/BAS-EN-129-dagger.jpg');
 
 
 

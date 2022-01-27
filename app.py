@@ -24,18 +24,16 @@ META_DATA.reflect()
 hero = META_DATA.tables['Hero_1']
 reka = META_DATA.tables['Reka']
 
-reka_select = reka.select()
 # result dla poczatkowej reki
+reka_select = reka.select()
 a = engine.execute(reka_select)
 result2 = a.fetchall()
 
+#result dla wszystkich kart
 hero_select = hero.select()
-# result dla wszystkich kart
-result = engine.execute(hero_select)
+c=engine.execute(hero_select)
+result= c.fetchall()
 
-id_selct = text("SELECT id FROM Reka")
-id_sel = engine.execute(id_selct)
-result_id = id_sel.fetchall
 
 reka_pieniadze = text("SELECT SUM(Monety) as monety FROM Reka")
 # text("SELECT Monety FROM REKA")
@@ -46,13 +44,18 @@ result_monety = b.fetchall
 
 class Partia:
     def __init__(self, imiona=['Ala', 'Bob']):
-        self.sklep_talia = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+        self.sklep_talia = [i[0]for i in result]
         self.sklep_wystawione = []
         self.gracze = [Gracz(imie) for imie in imiona if imie]
         self.sprzedane = []
+        self.talia()
+        self.potasuj()
         self.wystaw()
         # self.sprzedaj()
-
+    def talia(self):
+        del self.sklep_talia[-10:]
+    def potasuj(self):
+        shuffle(self.sklep_talia)
     def wystaw(self):
         ilosc = len(self.sklep_wystawione)
         if ilosc != 5:
@@ -75,18 +78,19 @@ class Partia:
         self.sklep_wystawione.pop(0)
         self.wystaw()
 
-
 class Gracz:
     def __init__(self, imie='Nieznane'):
         self.nazwa = imie
-        self.talia = [i[0] for i in result2]
+        self.talia = [i[0] for i in result]
         self.reka = []
         self.odrzucone = []
+        self.talia_gracz()
         self.potasuj()
         self.wyloz_karty()
         self.sumuj_monety()
-
     # self.koniec_tury()
+    def talia_gracz(self):
+        del self.talia[:54]
     def potasuj(self):
         shuffle(self.talia)
 
@@ -147,6 +151,9 @@ def index():
 @app.route('/plansza', methods=['GET', 'POST'])
 def plansza():
     global partia, ID_GRACZA
+    if partia is None:
+        return redirect("/plansza")
+
     # partia.wystaw() # wystawienie kart do sklepu
     if request.method == 'POST':
         # trzeba uzupelnic o to zeby mozna bylo tylko raz wylozyc karty w turze
