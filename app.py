@@ -7,6 +7,7 @@ from jinja2 import Template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy import text
+from sqlalchemy.orm import sessionmaker
 from gracz import Gracz
 from partia import Partia
 
@@ -20,9 +21,13 @@ META_DATA = MetaData(bind=engine)
 c = engine.connect()
 META_DATA.reflect()
 
+
 # select kart z tabel
 hero = META_DATA.tables['Hero_1']
 reka = META_DATA.tables['Reka']
+
+Session = sessionmaker(bind = engine)
+session = Session()
 
 # result dla poczatkowej reki
 reka_select = reka.select()
@@ -44,7 +49,7 @@ result_monety = b.fetchall
 
 class Partia:
     def __init__(self, imiona=['Ala', 'Bob']):
-        self.sklep_talia = [i[0]for i in result]
+        self.sklep_talia = [i[0] for i in result]
         self.sklep_wystawione = []
         self.gracze = [Gracz(imie) for imie in imiona if imie]
         self.sprzedane = []
@@ -61,7 +66,6 @@ class Partia:
         if ilosc != 5:
             self.sklep_wystawione.extend(self.sklep_talia[:(5 - ilosc)])
             del self.sklep_talia[:(5 - ilosc)]
-
     def karta(self, sprzedane):
         if len(self.sklep_wystawione) != 0:
             self.sprzedane = [self.sklep_wystawione[x] for x in sprzedane]
@@ -89,11 +93,11 @@ class Gracz:
         self.wyloz_karty()
         self.sumuj_monety()
     # self.koniec_tury()
+    #wyjecie z tali kart ktore sa podstawowe
     def talia_gracz(self):
         del self.talia[:54]
     def potasuj(self):
         shuffle(self.talia)
-
     def wyloz_karty(self):
         self.reka = self.talia[:5]
         del self.talia[:5]
@@ -124,14 +128,10 @@ class Gracz:
                 self.odrzucone.append(x)
 
     def sumuj_monety(self):
-        karty=result2
-        if self.reka in karty:
-                print('karty')
-        #for i in karty:
-        #    monety = result_monety
-       # print(monety)
-        #print(karty)
-
+        qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
+        monety = sum([i.Monety for i in qry])
+        nazwy = ([i.Nazwa for i in qry])
+        print(monety, nazwy)
 
 # wyciagniecie metody sprzedawania z Partia
 
@@ -153,7 +153,6 @@ def plansza():
     global partia, ID_GRACZA
     if partia is None:
         return redirect("/plansza")
-
     # partia.wystaw() # wystawienie kart do sklepu
     if request.method == 'POST':
         # trzeba uzupelnic o to zeby mozna bylo tylko raz wylozyc karty w turze
