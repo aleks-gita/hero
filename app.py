@@ -14,7 +14,7 @@ from partia import Partia
 app = Flask(__name__)
 
 # polaczenie z baza
-engine = create_engine('sqlite:///./Gra.db')
+engine = create_engine('sqlite:///./Gra.db', connect_args={'check_same_thread': False})
 
 META_DATA = MetaData(bind=engine)
 
@@ -56,6 +56,7 @@ class Partia:
         self.talia()
         self.potasuj()
         self.wystaw()
+        self.cena()
         # self.sprzedaj()
     def talia(self):
         del self.sklep_talia[-10:]
@@ -66,6 +67,7 @@ class Partia:
         if ilosc != 5:
             self.sklep_wystawione.extend(self.sklep_talia[:(5 - ilosc)])
             del self.sklep_talia[:(5 - ilosc)]
+
     def karta(self, sprzedane):
         if len(self.sklep_wystawione) != 0:
             self.sprzedane = [self.sklep_wystawione[x] for x in sprzedane]
@@ -76,7 +78,13 @@ class Partia:
         else:
             print("koniec sklepu")
         return
-        # usuniecie kart i uzupelnienie do 5 wystawionych
+
+    def cena(self):
+        qur2 = session.query(hero).filter(hero.c.ID.in_(self.sklep_wystawione)).all()
+        qur2 = sorted(qur2, key=lambda o: self.sklep_wystawione.index(o.ID))
+        cena = ([i.Cena for i in qur2])
+        return cena
+
 
     def sprzedaj(self):
         self.sklep_wystawione.pop(0)
@@ -88,10 +96,12 @@ class Gracz:
         self.talia = [i[0] for i in result]
         self.reka = []
         self.odrzucone = []
+        self.monety = 0
         self.talia_gracz()
         self.potasuj()
-        self.wyloz_karty()
-        self.sumuj_monety()
+        #self.wyloz_karty()
+        #self.sumuj_monety()
+
     # self.koniec_tury()
     #wyjecie z tali kart ktore sa podstawowe
     def talia_gracz(self):
@@ -121,61 +131,53 @@ class Gracz:
         del self.odrzucone[:]
         shuffle(self.talia)
 
-    # dodanie kupionej karty
     def kup(self, sprzedane):
         if sprzedane != None:
             for x in sprzedane:
                 self.odrzucone.append(x)
+        print(sprzedane)
+        qur3 = session.query(hero).filter(hero.c.ID.in_(sprzedane)).all()
+        #qur3 = sorted(qur3, key=lambda o: sprzedane.index(o.ID))
+        cena = sum([i.Cena for i in qur3])
+        self.monety = self.monety - cena
+
 
     def sumuj_monety(self):
         qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
         monety = sum([i.Monety for i in qry])
         nazwy = ([i.Nazwa for i in qry])
-        print(monety, nazwy)
-
-# wyciagniecie metody sprzedawania z Partia
-
-# karta=sprzedaj.karta()
+        self.monety = monety
+        #print(self.monety, nazwy)
 
 partia = None
 ID_GRACZA = 0
 
 
-# sprzedaj=Partia()
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('start.html')
-
 
 @app.route('/plansza', methods=['GET', 'POST'])
 def plansza():
     global partia, ID_GRACZA
     if partia is None:
-        return redirect("/plansza")
-    # partia.wystaw() # wystawienie kart do sklepu
+        return redirect("/")
     if request.method == 'POST':
-        # trzeba uzupelnic o to zeby mozna bylo tylko raz wylozyc karty w turze
         if request.form['action'] == "Wyloz karty":
             partia.gracze[ID_GRACZA].wyloz_karty()
+            partia.gracze[ID_GRACZA].sumuj_monety()
         if request.form['action'] == "Zakoncz ture":
             partia.gracze[ID_GRACZA].koniec_tury()
             if len(partia.gracze[ID_GRACZA].talia) == 0:
                 partia.gracze[ID_GRACZA].koniec_talii()
-            # partia.sprzedaj()#usuniecie kart kupionych i uzupelnienie
             partia.wystaw()
+            partia.gracze[ID_GRACZA].monety = 0
             ID_GRACZA += 1
             ID_GRACZA %= len(partia.gracze)
-            # kupowanie karty
-        # if request.form['action']=="Kup karty":
-        #    karta=partia.karta()
-        #    partia.gracze[ID_GRACZA].kup(karta)
         if request.form['action'] == "KUP":
             sprzedane = partia.karta(request.form.getlist('karta', type=int))
             partia.gracze[ID_GRACZA].kup(sprzedane)
-
-    return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA,
-                           result_monety=engine.execute(reka_pieniadze))
+    return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA)
 
 
 @app.route('/create', methods=['GET', 'POST'])

@@ -1,12 +1,13 @@
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="style.css" />
-	</head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href='/static/style.css' />
+    </head>
+
 	<body>
-	<h1>ROZGRYWKA<h1>
+	<h1>ROZGRYWKA</h1>
 		<p>{{partia.gracze[aktywny_gracz].nazwa}}</p>
-		
-	<table border: "solid black">
+	<table>
 		<tr>
 			<th>Sklep talia</th>
 		</tr>
@@ -14,21 +15,29 @@
 			<td>{{partia.sklep_talia}}</td>
 		</tr>
 		<tr>
-			<th>Skelp wystawione</th>
+			<th>Sklep wystawione</th>
 		</tr>		
 		<tr>
 			<form action="{{url_for('plansza')}}" method="post">
-				<td>
-				{% for karta in partia.sklep_wystawione %}
+
+				<td>{% for karta in partia.sklep_wystawione %}
 					<input type="checkbox" name="karta" value="{{loop.index0}}">
-					<label for="id_{{karta}}">{{karta}}</label>
-				{% endfor%}
-				</td>
-			<input type="submit" name="action" value="KUP">
-			</form>
+                    <label for="id_{{karta}}">{{karta}}</label>
+				{% endfor%}</td>
+                <input type="submit" name="action" value="KUP" id="button">
+            </form>
+        <tr>
+             <td>
+            {% for cena in partia.cena() %}
+                  {{cena}}
+            {% endfor %}
+             </td>
+        </tr>
+
+
 		</tr>	
 	</table>	
-	<h2>GRACZE<h2>
+	<h2>GRACZE</h2>
 	<table>
 		{% for gracz in partia.gracze %}
 		<tr>
@@ -36,31 +45,33 @@
 			<th>Talia kart osobistych</th>
 			<th>Reka</th>
 			<th>Talia kart odrzuconych</th>
+            <th>Suma monet na rece</th>
 		</tr>
 		<tr>
 			<td>{{gracz.nazwa}}</td>
 			<td>{{gracz.talia}}</td>
 			<td>{{gracz.reka}}</td>
 			<td>{{gracz.odrzucone}}</td>
+            <td>{{gracz.monety}}</td>
+
 			
 		</tr>
 		{% endfor%}
-		
 	</table>
-		{% for row in result_monety%}
+		{% for row in monety%}
 		<tr>
 			<td>{{row}}</td>
 		</tr>
 		{% endfor%}
 	<form action="{{url_for('plansza')}}" method="post">
-		<input type="submit" name="action" value="Wyloz karty">
+		<input type="submit" name="action" value="Wyloz karty" id="button">
 	</form>
 	<form action="{{url_for('plansza')}}" method="post">
-		<input type="submit" name="action" value="Zakoncz ture">
+		<input type="submit" name="action" value="Zakoncz ture" id="button">
 	</form>
 	
 	<form action="{{url_for('cards')}}" method="get">
-		<input type="submit" name="action" value="Pokarz karty">
+		<input type="submit" name="action" value="Pokarz karty" id="button">
 	</form>
 	
 	</body>
