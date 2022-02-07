@@ -67,6 +67,12 @@ class Partia:
         if ilosc != 5:
             self.sklep_wystawione.extend(self.sklep_talia[:(5 - ilosc)])
             del self.sklep_talia[:(5 - ilosc)]
+    def nazwa_wyswietl(self):
+        qur2 = session.query(hero).filter(hero.c.ID.in_(self.sklep_wystawione)).all()
+        qur2 = sorted(qur2, key=lambda o: self.sklep_wystawione.index(o.ID))
+        nazwa = ([i.Nazwa for i in qur2])
+        return nazwa
+
 
     def karta(self, sprzedane):
         if len(self.sklep_wystawione) != 0:
@@ -97,6 +103,7 @@ class Gracz:
         self.reka = []
         self.odrzucone = []
         self.monety = 0
+        self.atak = 0
         self.talia_gracz()
         self.potasuj()
         #self.wyloz_karty()
@@ -111,6 +118,11 @@ class Gracz:
     def wyloz_karty(self):
         self.reka = self.talia[:5]
         del self.talia[:5]
+    def zdjecie_wyswietl(self):
+        qur2 = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
+        qur2 = sorted(qur2, key=lambda o: self.reka.index(o.ID))
+        zdjecie = ([i.Zdjecie for i in qur2])
+        return zdjecie
 
     def dobierz_karte(self):
         self.reka = self.talia[1]
@@ -156,13 +168,18 @@ class Gracz:
             else:
                 return False
 
-
     def sumuj_monety(self):
         qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
         monety = sum([i.Monety for i in qry])
         nazwy = ([i.Nazwa for i in qry])
         self.monety = monety
         #print(self.monety, nazwy)
+
+    def sumuj_atak(self):
+        qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
+        atak = sum([i.Atak for i in qry])
+        self.atak = atak
+        # print(self.monety, nazwy)
 
 partia = None
 ID_GRACZA = 0
@@ -181,12 +198,14 @@ def plansza():
         if request.form['action'] == "Wyloz karty":
             partia.gracze[ID_GRACZA].wyloz_karty()
             partia.gracze[ID_GRACZA].sumuj_monety()
+            partia.gracze[ID_GRACZA].sumuj_atak()
         if request.form['action'] == "Zakoncz ture":
             partia.gracze[ID_GRACZA].koniec_tury()
             if len(partia.gracze[ID_GRACZA].talia) == 0:
                 partia.gracze[ID_GRACZA].koniec_talii()
             partia.wystaw()
             partia.gracze[ID_GRACZA].monety = 0
+            partia.gracze[ID_GRACZA].atak = 0
             ID_GRACZA += 1
             ID_GRACZA %= len(partia.gracze)
         if request.form['action'] == "KUP":

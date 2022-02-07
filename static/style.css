@@ -7,9 +7,15 @@ body{
 	background-attachment:fixed ;
     background-size:cover;
 }
+#body_plansza{
+    background-color:#7CA7B3;
+	background-attachment:fixed ;
+    background-size:cover;
+}
+
 #start{
     text-align: center;
-    #padding-top: 500px;
+    padding-top: 200px;
 }
 #button_start{
      --glow-color: rgb(217, 176, 255);
@@ -69,7 +75,7 @@ td {
   vertical-align: middle;
 }
 th{
-    background-color: darkgray ;
+    background-color: gainsboro ;
 }
 table th {
   border: 1px solid black;
@@ -100,7 +106,12 @@ table th {
 .button:active {
  transform: translateY(-1px);
 }
-
+#logo_plansza{
+    text-align: center;
+}
+#reka{
+    text-align: center;
+}
 
 
 
