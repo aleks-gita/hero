@@ -2,12 +2,12 @@
 	<head>
         <link rel="stylesheet" type="text/css" href='/static/style.css' />
 	</head>
-	<body>
-	<h1>START</h1>
-		
-	<form action="{{url_for('create')}}" method="get">
-		<input type="submit" value="Rozpocznij" id="button" >
-	</form>
-	
+	<body id="body_start">
+    <img src="../static/logo.png" alt="logo" />
+    <div id="start">
+        <form action="{{url_for('create')}}" method="get">
+            <input type="submit" value="Rozpocznij" class="button" id="button_start">
+        </form>
+    </div>
 	</body>
 </html>

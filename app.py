@@ -86,9 +86,9 @@ class Partia:
         return cena
 
 
-    def sprzedaj(self):
-        self.sklep_wystawione.pop(0)
-        self.wystaw()
+    #def sprzedaj(self):
+    #    self.sklep_wystawione.pop(0)
+    #    self.wystaw()
 
 class Gracz:
     def __init__(self, imie='Nieznane'):
@@ -131,15 +131,30 @@ class Gracz:
         del self.odrzucone[:]
         shuffle(self.talia)
 
+    def cena(self, sprzedane):
+        qur3 = session.query(hero).filter(hero.c.ID.in_(sprzedane)).all()
+        # qur3 = sorted(qur3, key=lambda o: sprzedane.index(o.ID))
+        cena = sum([i.Cena for i in qur3])
+        return cena
+
+    def sprawdz(self, sprzedane):
+        if self.cena(sprzedane)>=self.monety:
+            return True
+        else:
+            return False
+
     def kup(self, sprzedane):
         if sprzedane != None:
-            for x in sprzedane:
-                self.odrzucone.append(x)
-        print(sprzedane)
-        qur3 = session.query(hero).filter(hero.c.ID.in_(sprzedane)).all()
-        #qur3 = sorted(qur3, key=lambda o: sprzedane.index(o.ID))
-        cena = sum([i.Cena for i in qur3])
-        self.monety = self.monety - cena
+            qur3 = session.query(hero).filter(hero.c.ID.in_(sprzedane)).all()
+            # qur3 = sorted(qur3, key=lambda o: sprzedane.index(o.ID))
+            cena = sum([i.Cena for i in qur3])
+            if self.monety >= cena:
+                self.monety = self.monety - cena
+                for x in sprzedane:
+                    self.odrzucone.append(x)
+                print(sprzedane)
+            else:
+                return False
 
 
     def sumuj_monety(self):

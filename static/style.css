@@ -2,6 +2,61 @@ body{
 	font-family: 'Lato', sans-serif;
     background-color: white;
 }
+#body_start{
+    background-image: url(tlo2_start.jpg);
+	background-attachment:fixed ;
+    background-size:cover;
+}
+#start{
+    text-align: center;
+    #padding-top: 500px;
+}
+#button_start{
+     --glow-color: rgb(217, 176, 255);
+     --glow-spread-color: rgba(191, 123, 255, 0.781);
+     --enhanced-glow-color: rgb(231, 206, 255);
+     --btn-color: rgb(100, 61, 136);
+     border: .25em solid var(--glow-color);
+     padding: 1em 3em;
+     color: var(--glow-color);
+     font-size: 30px;
+     font-weight: bold;
+     background-color: var(--btn-color);
+     border-radius: 1em;
+     outline: none;
+     box-shadow: 0 0 1em .25em var(--glow-color),
+            0 0 4em 1em var(--glow-spread-color),
+            inset 0 0 .75em .25em var(--glow-color);
+     text-shadow: 0 0 .5em var(--glow-color);
+     position: relative;
+     transition: all 0.3s;
+}
+#button_start::after {
+     pointer-events: none;
+     content: "";
+     position: absolute;
+     top: 120%;
+     left: 0;
+     height: 100%;
+     width: 100%;
+     background-color: var(--glow-spread-color);
+     filter: blur(2em);
+     opacity: .7;
+     transform: perspective(1.5em) rotateX(35deg) scale(1, .6);
+}
+#button_start:hover {
+    color: var(--btn-color);
+    background-color: var(--glow-color);
+    box-shadow: 0 0 1em .25em var(--glow-color),
+        0 0 4em 2em var(--glow-spread-color),
+        inset 0 0 .75em .25em var(--glow-color);
+}
+
+#button_start:active {
+ box-shadow: 0 0 0.6em .25em var(--glow-color),
+        0 0 2.5em 2em var(--glow-spread-color),
+        inset 0 0 .5em .25em var(--glow-color);
+}
 h1{
   text-align: center;
 }
@@ -19,30 +74,31 @@ th{
 table th {
   border: 1px solid black;
 }
-#button{
-  background-color: gainsboro;
-  border: 2px solid black;
-  border-radius: 30px;
-  color: black;
-  cursor: pointer;
-  display: inline-block;
-  font-weight: 600;
-  font-size: 15px;
-  padding: 0 9px;
-  line-height: 50px;
-  text-align: center;
-  text-decoration: none;
-  user-select: none;
-  touch-action: manipulation;
+.button {
+ padding: 1.3em 3em;
+ font-size: 12px;
+ text-transform: uppercase;
+ letter-spacing: 2.5px;
+ font-weight: 500;
+ color: #fff;
+ background-color: #000;
+ border: none;
+ border-radius: 45px;
+ box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+ transition: all 0.3s ease 0s;
+ cursor: pointer;
+ outline: none;
 }
 
-#button:hover {
-  background-color: #fff;
+.button:hover {
+ background-color: #2EE59D;
+ box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+ color: #fff;
+ transform: translateY(-7px);
 }
 
-#button:active {
-  box-shadow: #422800 2px 2px 0 0;
-  transform: translate(2px, 2px);
+.button:active {
+ transform: translateY(-1px);
 }
 
 
