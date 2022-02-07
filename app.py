@@ -67,11 +67,11 @@ class Partia:
         if ilosc != 5:
             self.sklep_wystawione.extend(self.sklep_talia[:(5 - ilosc)])
             del self.sklep_talia[:(5 - ilosc)]
-    def nazwa_wyswietl(self):
+    def zdjecie_wyswietl(self):
         qur2 = session.query(hero).filter(hero.c.ID.in_(self.sklep_wystawione)).all()
         qur2 = sorted(qur2, key=lambda o: self.sklep_wystawione.index(o.ID))
-        nazwa = ([i.Nazwa for i in qur2])
-        return nazwa
+        zdjecie = ([i.Zdjecie for i in qur2])
+        return zdjecie
 
 
     def karta(self, sprzedane):
@@ -118,6 +118,7 @@ class Gracz:
     def wyloz_karty(self):
         self.reka = self.talia[:5]
         del self.talia[:5]
+
     def zdjecie_wyswietl(self):
         qur2 = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
         qur2 = sorted(qur2, key=lambda o: self.reka.index(o.ID))
