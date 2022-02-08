@@ -39,7 +39,6 @@ hero_select = hero.select()
 c=engine.execute(hero_select)
 result= c.fetchall()
 
-
 reka_pieniadze = text("SELECT SUM(Monety) as monety FROM Reka")
 # text("SELECT Monety FROM REKA")
 # text("SELECT SUM(Monety) as monety FROM Reka")
@@ -94,6 +93,8 @@ class Partia:
         qur2 = sorted(qur2, key=lambda o: self.sklep_wystawione.index(o.ID))
         cena = ([i.Cena for i in qur2])
         return cena
+    def atak(self,atak):
+        return atak
 
 class Gracz:
     def __init__(self, imie='Nieznane'):
@@ -104,6 +105,7 @@ class Gracz:
         self.kupione=[]
         self.monety = 0
         self.atak = 0
+        self.zycie = 50
         self.talia_gracz()
         self.potasuj()
         #self.wyloz_karty()
@@ -174,6 +176,10 @@ class Gracz:
         self.atak = atak
         # print(self.monety, nazwy)
 
+    def atak(self, atak):
+        self.zycie = self.zycie - atak
+
+
 partia = None
 ID_GRACZA = 0
 
@@ -207,6 +213,12 @@ def plansza():
             sprzedane = partia.karta(request.form.getlist('karta', type=int))
             kupione = aktualny.kup(sprzedane)
             partia.aktualizuj_sklep(kupione)
+        if request.form['action'] == "Zadaj atak":
+           # gracz=request.form.getlist('gracz', type=int)
+            atak = partia.atak(request.form.get('atak', type=int))
+            imie=(request.form.get('gracz'))
+            partia.gracze[imie].atak(atak)
+
 
     return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA)
 

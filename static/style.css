@@ -7,12 +7,17 @@ body{
 	background-attachment:fixed ;
     background-size:cover;
 }
+#body_create{
+    #background-image: url(HeroRealmsWallpaper2.png);
+    background-color: black;
+	background-attachment:fixed ;
+    background-size:cover;
+}
 #body_plansza{
     background-color:#F2EDDC;
 	background-attachment:fixed ;
     background-size:cover;
 }
-
 #start{
     text-align: center;
     padding-top: 200px;
@@ -62,6 +67,26 @@ body{
  box-shadow: 0 0 0.6em .25em var(--glow-color),
         0 0 2.5em 2em var(--glow-spread-color),
         inset 0 0 .5em .25em var(--glow-color);
+}
+#form_create{
+    color: #5E9ABF;
+    border: .25em solid var(--glow-color);
+    text-align: center;
+    padding:50px;
+    font-size: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+	margin: 50px 400px;
+	box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+	border-radius: 10px;
+}
+.gracz{
+    font-size: 30px;
+    border-radius: 10px;
+    margin: 5px;
+    padding: 5px;
+    color: #5E9ABF;
+    background-color: black;
 }
 h1{
   text-align: center;

@@ -1,15 +1,17 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href='/static/style.css' />
-	<title>Zaczynamy</title>
+	<title>Hero realms</title>
 </head>
-<body>
+<body id="body_create">
+    <div id="form_create">
 	<form action="{{url_for('create')}}" method="post">
-		<div>Gracz 1:<input name="gracz1" value='gracz1'></div>
-		<div>Gracz 2:<input name="gracz2" value='gracz2'></div>
-		<div>Gracz 3:<input name="gracz3" value='gracz3'></div>
-		<div>Gracz 4:<input name="gracz4"></div>
+		<div>Gracz 1:<input name="gracz1" value='gracz1' class="gracz"></div>
+		<div>Gracz 2:<input name="gracz2" value='gracz2' class="gracz"></div>
+		<div>Gracz 3:<input name="gracz3" value='gracz3' class="gracz"></div>
+		<div>Gracz 4:<input name="gracz4" class="gracz"></div>
 		<input type="submit" value="Dołącz do gry" class="button">
 	</form>
+    </div>
 </body>
 </html>
