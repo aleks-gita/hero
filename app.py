@@ -215,8 +215,8 @@ def plansza():
             partia.aktualizuj_sklep(kupione)
         if request.form['action'] == "Zadaj atak":
            # gracz=request.form.getlist('gracz', type=int)
-            atak = partia.atak(request.form.get('atak', type=int))
-            imie=(request.form.get('gracz'))
+            atak = request.form.get('atak', type=int)
+            imie= request.form.get('gracz', type=str)
             partia.gracze[imie].atak(atak)
 
 

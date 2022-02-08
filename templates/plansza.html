@@ -41,11 +41,11 @@
             <form action="{{url_for('plansza')}}" method="post">
                 {% for gracz in partia.gracze %}
                     {% if gracz != partia.gracze[aktywny_gracz] %}
-                    <label for="atak" name="gracz" value="{{gracz.nazwa}}">Zaatakuj: {{gracz.nazwa}}</label>
-                        <select id="atak" name="atak" form="atakform">
-                          <option value="0">0</option>
-                          <option value="5">5</option>
-                          <option value="10">10</option>
+                    <label name="gracz" value="{{gracz.nazwa}}">Zaatakuj: {{gracz.nazwa}}</label>
+                        <select name="atak" >
+                              <option value="0">0</option>
+                              <option value="5">5</option>
+                              <option value="10">10</option>
                         </select>
                     {% endif %}
                 {% endfor %}
