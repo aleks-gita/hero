@@ -41,7 +41,8 @@
             <form action="{{url_for('plansza')}}" method="post">
                 {% for gracz in partia.gracze %}
                     {% if gracz != partia.gracze[aktywny_gracz] %}
-                    <label name="gracz" value="{{gracz.nazwa}}">Zaatakuj: {{gracz.nazwa}}</label>
+                        <input type="hidden"name="gracz" value="{{loop.index}}">
+                        <label> Zaatakuj: {{loop.index}} </label>
                         <select name="atak" >
                               <option value="0">0</option>
                               <option value="5">5</option>

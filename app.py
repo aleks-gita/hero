@@ -216,8 +216,8 @@ def plansza():
         if request.form['action'] == "Zadaj atak":
            # gracz=request.form.getlist('gracz', type=int)
             atak = request.form.get('atak', type=int)
-            imie= request.form.get('gracz', type=str)
-            partia.gracze[imie].atak(atak)
+            id= request.form.get('gracz', type=int)
+            partia.gracze[id].atak(atak)
 
 
     return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA)
