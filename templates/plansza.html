@@ -22,7 +22,6 @@
 		</tr>		
 		<tr>
 			<form action="{{url_for('plansza')}}" method="post">
-
 				<td>{% for karta in partia.zdjecie_wyswietl()%}
 					<input type="checkbox" name="karta" value="{{loop.index0}}">
                     <label for="id_{{karta}}"><img src="{{karta}}" alt="karta" width="215" height="319"/></label>
@@ -36,9 +35,6 @@
             {% endfor %}
              </td>
         </tr>
-
-
-		</tr>	
 	</table>	
 	<h2>GRACZE</h2>
 	<table>
@@ -58,8 +54,6 @@
 			<td>{{gracz.odrzucone}}</td>
             <td>{{gracz.monety}}</td>
             <td>{{gracz.atak}}</td>
-
-			
 		</tr>
 		{% endfor%}
 	</table>
@@ -76,7 +70,6 @@
 	<form action="{{url_for('plansza')}}" method="post">
 		<input type= "submit" name="action" value="Wyloz karty" class="button">
     </form>
-
 	<form action="{{url_for('plansza')}}" method="post">
 		<input type="submit" name="action" value="Zakoncz ture" class="button">
 	</form>

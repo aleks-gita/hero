@@ -58,32 +58,36 @@ class Partia:
         self.wystaw()
         self.cena()
         # self.sprzedaj()
+
     def talia(self):
         del self.sklep_talia[-10:]
-    def potasuj(self):
-        shuffle(self.sklep_talia)
-    def wystaw(self):
-        ilosc = len(self.sklep_wystawione)
-        if ilosc != 5:
-            self.sklep_wystawione.extend(self.sklep_talia[:(5 - ilosc)])
-            del self.sklep_talia[:(5 - ilosc)]
+
     def zdjecie_wyswietl(self):
         qur2 = session.query(hero).filter(hero.c.ID.in_(self.sklep_wystawione)).all()
         qur2 = sorted(qur2, key=lambda o: self.sklep_wystawione.index(o.ID))
         zdjecie = ([i.Zdjecie for i in qur2])
         return zdjecie
 
+    def potasuj(self):
+        shuffle(self.sklep_talia)
+
+    def wystaw(self):
+        ilosc = len(self.sklep_wystawione)
+        if ilosc != 5:
+            self.sklep_wystawione.extend(self.sklep_talia[:(5 - ilosc)])
+            del self.sklep_talia[:(5 - ilosc)]
 
     def karta(self, sprzedane):
         if len(self.sklep_wystawione) != 0:
             self.sprzedane = [self.sklep_wystawione[x] for x in sprzedane]
-            robocza_lista = [x for x in self.sklep_wystawione if x not in self.sprzedane]
-            self.sklep_wystawione = robocza_lista
             return self.sprzedane
-            self.sprzedane = []
         else:
             print("koniec sklepu")
         return
+
+    def aktualizuj_sklep(self, kupione):
+        aktualizacja_sklepu = [x for x in self.sklep_wystawione if x not in kupione]
+        self.sklep_wystawione = aktualizacja_sklepu
 
     def cena(self):
         qur2 = session.query(hero).filter(hero.c.ID.in_(self.sklep_wystawione)).all()
@@ -91,17 +95,13 @@ class Partia:
         cena = ([i.Cena for i in qur2])
         return cena
 
-
-    #def sprzedaj(self):
-    #    self.sklep_wystawione.pop(0)
-    #    self.wystaw()
-
 class Gracz:
     def __init__(self, imie='Nieznane'):
         self.nazwa = imie
         self.talia = [i[0] for i in result]
         self.reka = []
         self.odrzucone = []
+        self.kupione=[]
         self.monety = 0
         self.atak = 0
         self.talia_gracz()
@@ -113,8 +113,10 @@ class Gracz:
     #wyjecie z tali kart ktore sa podstawowe
     def talia_gracz(self):
         del self.talia[:54]
+
     def potasuj(self):
         shuffle(self.talia)
+
     def wyloz_karty(self):
         self.reka = self.talia[:5]
         del self.talia[:5]
@@ -144,18 +146,6 @@ class Gracz:
         del self.odrzucone[:]
         shuffle(self.talia)
 
-    def cena(self, sprzedane):
-        qur3 = session.query(hero).filter(hero.c.ID.in_(sprzedane)).all()
-        # qur3 = sorted(qur3, key=lambda o: sprzedane.index(o.ID))
-        cena = sum([i.Cena for i in qur3])
-        return cena
-
-    def sprawdz(self, sprzedane):
-        if self.cena(sprzedane)>=self.monety:
-            return True
-        else:
-            return False
-
     def kup(self, sprzedane):
         if sprzedane != None:
             qur3 = session.query(hero).filter(hero.c.ID.in_(sprzedane)).all()
@@ -165,16 +155,18 @@ class Gracz:
                 self.monety = self.monety - cena
                 for x in sprzedane:
                     self.odrzucone.append(x)
-                print(sprzedane)
+                for x in sprzedane:
+                    self.kupione.append(x)
+                return self.kupione
             else:
-                return False
+                return self.kupione
 
     def sumuj_monety(self):
         qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
         monety = sum([i.Monety for i in qry])
         nazwy = ([i.Nazwa for i in qry])
         self.monety = monety
-        #print(self.monety, nazwy)
+        return self.monety
 
     def sumuj_atak(self):
         qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
@@ -193,25 +185,29 @@ def index():
 @app.route('/plansza', methods=['GET', 'POST'])
 def plansza():
     global partia, ID_GRACZA
+
     if partia is None:
         return redirect("/")
     if request.method == 'POST':
+        aktualny = partia.gracze[ID_GRACZA]
         if request.form['action'] == "Wyloz karty":
-            partia.gracze[ID_GRACZA].wyloz_karty()
-            partia.gracze[ID_GRACZA].sumuj_monety()
-            partia.gracze[ID_GRACZA].sumuj_atak()
+            aktualny.wyloz_karty()
+            aktualny.sumuj_monety()
+            aktualny.sumuj_atak()
         if request.form['action'] == "Zakoncz ture":
-            partia.gracze[ID_GRACZA].koniec_tury()
-            if len(partia.gracze[ID_GRACZA].talia) == 0:
-                partia.gracze[ID_GRACZA].koniec_talii()
+            aktualny.koniec_tury()
+            if len(aktualny.talia) == 0:
+                aktualny.koniec_talii()
             partia.wystaw()
-            partia.gracze[ID_GRACZA].monety = 0
-            partia.gracze[ID_GRACZA].atak = 0
+            aktualny.monety = 0
+            aktualny.atak = 0
             ID_GRACZA += 1
             ID_GRACZA %= len(partia.gracze)
         if request.form['action'] == "KUP":
             sprzedane = partia.karta(request.form.getlist('karta', type=int))
-            partia.gracze[ID_GRACZA].kup(sprzedane)
+            kupione = aktualny.kup(sprzedane)
+            partia.aktualizuj_sklep(kupione)
+
     return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA)
 
 
