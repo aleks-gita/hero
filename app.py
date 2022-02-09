@@ -174,6 +174,7 @@ class Gracz:
         qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
         atak = sum([i.Atak for i in qry])
         self.atak = atak
+
         # print(self.monety, nazwy)
 
     def atakuj(self, atak):
@@ -217,24 +218,14 @@ def plansza():
         if request.form['action'] == "Zadaj atak":
            # gracz=request.form.getlist('gracz', type=int)
             #atak = request.form.get('atak', type=int)
-            id= request.form.get('gracz', type=int)
+            #id= request.form.get('gracz', type=int)
             for i in range(len(partia.gracze)):
-                id = request.form.get('gracz', type=int)
-                if id == aktualny:
+                #id = request.form.get('gracz', type=int)
+                if i == ID_GRACZA:
                     continue
-                atak = request.form.get('atak{id}', type=int)
-                partia.gracze[id].atakuj(atak)
-            #for gracz in partia.gracze:
-            #    id = request.form.get('gracz', type=int)
-            #    if id == 1:
-            #        atak = request.form.get('atak1', type=int)
-            #    if id == 2:
-            #        atak = request.form.get('atak2', type=int)
-            #    if id == 3:
-            #        atak = request.form.get('atak3', type=int)
-            #    if id == 4:
-            #        atak = request.form.get('atak4', type=int)
-            #    partia.gracze[id].atakuj(atak)
+                atak = request.form.get(f'atak{i+1}', type=int)
+                partia.gracze[i].atakuj(atak)
+
 
 
     return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA)
