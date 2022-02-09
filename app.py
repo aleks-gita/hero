@@ -106,6 +106,7 @@ class Gracz:
         self.monety = 0
         self.atak = 0
         self.zycie = 50
+        self.dict = {}
         self.talia_gracz()
         self.potasuj()
         #self.wyloz_karty()
@@ -174,11 +175,34 @@ class Gracz:
         qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
         atak = sum([i.Atak for i in qry])
         self.atak = atak
+        return self.atak
 
         # print(self.monety, nazwy)
-
     def atakuj(self, atak):
         self.zycie = self.zycie - atak
+
+    def slownik(self, i, atak, d):
+        d[i] = atak
+        #self.dict[i] = atak
+        return (d)
+
+
+            #if atak <= self.atak:
+             #   self.zycie = self.zycie - atak
+              #  print(atak)
+             #   self.atak = self.atak - atak
+              #  print(self.atak)
+
+
+    def odejmij_atak(self, i, atak, d):
+        slownik = self.slownik(i,atak,d)
+        atak = list(slownik.values())
+        suma = 0
+        for x in atak:
+            suma +=x
+        print(suma)
+
+
 
 
 
@@ -219,12 +243,20 @@ def plansza():
            # gracz=request.form.getlist('gracz', type=int)
             #atak = request.form.get('atak', type=int)
             #id= request.form.get('gracz', type=int)
+            d = {}
             for i in range(len(partia.gracze)):
                 #id = request.form.get('gracz', type=int)
                 if i == ID_GRACZA:
                     continue
                 atak = request.form.get(f'atak{i+1}', type=int)
+                #partia.gracze[i].atakuj(i, atak)
+
+                partia.gracze[i].slownik(i, atak, d)
                 partia.gracze[i].atakuj(atak)
+
+            partia.gracze[i].odejmij_atak(i, atak, d)
+
+
 
 
 
