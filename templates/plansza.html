@@ -43,7 +43,7 @@
                     {% if gracz != partia.gracze[aktywny_gracz] %}
                         <input type="hidden"name="gracz" value="{{loop.index}}">
                         <label> Zaatakuj: {{loop.index}} </label>
-                        <select name="atak" >
+                        <select name="atak{{loop.index}}" >
                               <option value="0">0</option>
                               <option value="5">5</option>
                               <option value="10">10</option>

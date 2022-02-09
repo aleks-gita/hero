@@ -176,8 +176,9 @@ class Gracz:
         self.atak = atak
         # print(self.monety, nazwy)
 
-    def atak(self, atak):
+    def atakuj(self, atak):
         self.zycie = self.zycie - atak
+
 
 
 partia = None
@@ -215,9 +216,25 @@ def plansza():
             partia.aktualizuj_sklep(kupione)
         if request.form['action'] == "Zadaj atak":
            # gracz=request.form.getlist('gracz', type=int)
-            atak = request.form.get('atak', type=int)
+            #atak = request.form.get('atak', type=int)
             id= request.form.get('gracz', type=int)
-            partia.gracze[id].atak(atak)
+            for i in range(len(partia.gracze)):
+                id = request.form.get('gracz', type=int)
+                if id == aktualny:
+                    continue
+                atak = request.form.get('atak{id}', type=int)
+                partia.gracze[id].atakuj(atak)
+            #for gracz in partia.gracze:
+            #    id = request.form.get('gracz', type=int)
+            #    if id == 1:
+            #        atak = request.form.get('atak1', type=int)
+            #    if id == 2:
+            #        atak = request.form.get('atak2', type=int)
+            #    if id == 3:
+            #        atak = request.form.get('atak3', type=int)
+            #    if id == 4:
+            #        atak = request.form.get('atak4', type=int)
+            #    partia.gracze[id].atakuj(atak)
 
 
     return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA)
