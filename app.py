@@ -178,10 +178,16 @@ class Gracz:
         return self.atak
 
         # print(self.monety, nazwy)
+
+    def id(self, slownik):
+        i = list(slownik.keys())
+        return i
+
     def atakuj(self, atak):
+
         self.zycie = self.zycie - atak
 
-    def slownik(self, i, atak, d):
+    def slownik(self, i, atak, d={}):
         d[i] = atak
         #self.dict[i] = atak
         return (d)
@@ -194,13 +200,18 @@ class Gracz:
               #  print(self.atak)
 
 
-    def odejmij_atak(self, i, atak, d):
+    def suma(self, i, atak, d):
         slownik = self.slownik(i,atak,d)
         atak = list(slownik.values())
         suma = 0
         for x in atak:
             suma +=x
-        print(suma)
+        return suma
+
+    def odejmij_atak(self, i, atak, d):
+        self.atak = self.atak - self.suma( i, atak, d)
+        #print(suma)
+
 
 
 
@@ -249,13 +260,17 @@ def plansza():
                 if i == ID_GRACZA:
                     continue
                 atak = request.form.get(f'atak{i+1}', type=int)
-                #partia.gracze[i].atakuj(i, atak)
-
-                partia.gracze[i].slownik(i, atak, d)
-                partia.gracze[i].atakuj(atak)
-
-            partia.gracze[i].odejmij_atak(i, atak, d)
-
+                slownik =partia.gracze[i].slownik(i, atak, d)
+            print(slownik)
+            x = list(slownik.keys())
+            print(x)
+            if  aktualny.suma(i, atak, d) <= aktualny.atak:
+                for i in x:
+                    atak = request.form.get(f'atak{i + 1}', type=int)
+                    partia.gracze[i].atakuj(atak)
+                aktualny.odejmij_atak(i, atak, d)
+            else:
+                return redirect("/plansza", title="blad")
 
 
 
