@@ -88,6 +88,20 @@ body{
     color: #5E9ABF;
     background-color: black;
 }
+#atak{
+    font-size: 30px;
+    border-radius: 10px;
+    margin: 5px;
+    padding: 5px;
+    color: black;
+    background-color: #F2EDDC  ;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  opacity: 1;
+  background-color: #2EE59D;
+}
 h1{
   text-align: center;
 }

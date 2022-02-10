@@ -43,8 +43,8 @@
                 {% for gracz in partia.gracze %}
                     {% if gracz != partia.gracze[aktywny_gracz] %}
                         <input type="hidden"name="gracz" value="{{loop.index}}">
-                        <label> Zaatakuj gracza: {{gracz.nazwa }}</label>
-                        <input type="number" id="quantity" name="atak{{loop.index}}" min="0" max="{{partia.gracze[aktywny_gracz].atak}}" value="0">
+                        <label> Zaatakuj: {{gracz.nazwa }}</label>
+                        <input id="atak" type="number" id="quantity" name="atak{{loop.index}}" min="0" max="{{partia.gracze[aktywny_gracz].atak}}" value="0">
                     {% endif %}
                 {% endfor %}
             <input type="submit" name="action" value="Zadaj atak" class="button">

@@ -96,6 +96,9 @@ class Partia:
     def atak(self,atak):
         return atak
 
+    def przegrane(self, i):
+        del self.gracze[i]
+
 class Gracz:
     def __init__(self, imie='Nieznane'):
         self.nazwa = imie
@@ -105,7 +108,7 @@ class Gracz:
         self.kupione=[]
         self.monety = 0
         self.atak = 0
-        self.zycie = 50
+        self.zycie = 15
         self.dict = {}
         self.talia_gracz()
         self.potasuj()
@@ -149,6 +152,8 @@ class Gracz:
         del self.odrzucone[:]
         shuffle(self.talia)
 
+
+
     def kup(self, sprzedane):
         if sprzedane != None:
             qur3 = session.query(hero).filter(hero.c.ID.in_(sprzedane)).all()
@@ -184,32 +189,26 @@ class Gracz:
         return i
 
     def atakuj(self, atak):
-
         self.zycie = self.zycie - atak
+        return self.zycie
 
     def slownik(self, i, atak, d={}):
         d[i] = atak
-        #self.dict[i] = atak
         return (d)
 
-
-            #if atak <= self.atak:
-             #   self.zycie = self.zycie - atak
-              #  print(atak)
-             #   self.atak = self.atak - atak
-              #  print(self.atak)
-
-
-    def suma(self, i, atak, d):
-        slownik = self.slownik(i,atak,d)
-        atak = list(slownik.values())
+    def suma(self, slownik):
+        slownik_1 = slownik
+        print('SLOWNIK', slownik_1)
+        atak = list(slownik_1.values())
+        print('atak', atak)
         suma = 0
         for x in atak:
             suma +=x
+        print('suma',suma)
         return suma
 
-    def odejmij_atak(self, i, atak, d):
-        self.atak = self.atak - self.suma( i, atak, d)
+    def odejmij_atak(self,slownik):
+        self.atak = self.atak - self.suma(slownik)
         #print(suma)
 
 
@@ -261,16 +260,25 @@ def plansza():
                     continue
                 atak = request.form.get(f'atak{i+1}', type=int)
                 slownik =partia.gracze[i].slownik(i, atak, d)
-            print(slownik)
+            print('slownik', slownik)
             x = list(slownik.keys())
-            print(x)
-            if  aktualny.suma(i, atak, d) <= aktualny.atak:
+            print('gracze',x)
+            if  aktualny.suma(slownik) <= aktualny.atak:
+                print(aktualny.suma(slownik) )
                 for i in x:
                     atak = request.form.get(f'atak{i + 1}', type=int)
+                    print("dla gracza, atak", i, atak)
                     partia.gracze[i].atakuj(atak)
-                aktualny.odejmij_atak(i, atak, d)
+                    if partia.gracze[i].zycie <= 0:
+                        partia.przegrane(i)
+                        del x[i]
+                        #ID_GRACZA %= len(partia.gracze)
+                    if len(partia.gracze) == 1:
+                        return redirect("/create")
+                ID_GRACZA %= len(partia.gracze)
+                aktualny.odejmij_atak(slownik)
             else:
-                return redirect("/plansza", title="blad")
+                return "blad"
 
 
 
