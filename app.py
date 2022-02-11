@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import render_template
+from collections import Counter
 from random import randint
 from random import shuffle
 from flask import request, redirect
@@ -24,6 +25,7 @@ META_DATA.reflect()
 
 # select kart z tabel
 hero = META_DATA.tables['Hero_1']
+hero_laczenie = META_DATA.tables['Hero_laczenie']
 reka = META_DATA.tables['Reka']
 
 Session = sessionmaker(bind = engine)
@@ -106,17 +108,15 @@ class Gracz:
         self.reka = []
         self.odrzucone = []
         self.kupione=[]
+        self.zielone = []
+        self.lista = []
         self.monety = 0
         self.atak = 0
-        self.zycie = 15
+        self.zycie = 2
         self.dict = {}
         self.talia_gracz()
         self.potasuj()
-        #self.wyloz_karty()
-        #self.sumuj_monety()
 
-    # self.koniec_tury()
-    #wyjecie z tali kart ktore sa podstawowe
     def talia_gracz(self):
         del self.talia[:54]
 
@@ -124,8 +124,9 @@ class Gracz:
         shuffle(self.talia)
 
     def wyloz_karty(self):
-        self.reka = self.talia[:5]
-        del self.talia[:5]
+        self.reka= [9, 13, 36, 37, 52, 44,5]
+    #    self.reka = self.talia[:5]
+    #    del self.talia[:5]
 
     def zdjecie_wyswietl(self):
         qur2 = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
@@ -133,11 +134,15 @@ class Gracz:
         zdjecie = ([i.Zdjecie for i in qur2])
         return zdjecie
 
+    def zobacz_karty(self):
+
+        qur2 = session.query(hero).filter(hero.c.ID.in_(self.odrzucone)).all()
+        qur2 = sorted(qur2, key=lambda o: self.odrzucone.index(o.ID))
+        zdjecie = ([i.Zdjecie for i in qur2])
+        return zdjecie
+
     def dobierz_karte(self):
         self.reka = self.talia[1]
-
-    def kup_karte(self):
-        pass
 
     def odrzuc_karte(self):
         self.odrzucone.extend(self.talia[1])
@@ -151,8 +156,6 @@ class Gracz:
         self.talia.extend(self.odrzucone[:])
         del self.odrzucone[:]
         shuffle(self.talia)
-
-
 
     def kup(self, sprzedane):
         if sprzedane != None:
@@ -181,8 +184,11 @@ class Gracz:
         atak = sum([i.Atak for i in qry])
         self.atak = atak
         return self.atak
+    def sumuj_zdrowie(self):
+        qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
+        zdrowie = sum([i.Zdrowie for i in qry])
+        self.zycie = self.zycie + zdrowie
 
-        # print(self.monety, nazwy)
 
     def id(self, slownik):
         i = list(slownik.keys())
@@ -212,12 +218,69 @@ class Gracz:
         #print(suma)
 
 
+    def kolor(self):
+        qur2 = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()#where(hero.c.Kolor == 'Zielony')
+        qur2 = sorted(qur2, key=lambda o: self.reka.index(o.ID))
+        id = ([i.ID for i in qur2])
+        zielony = 0
+        czerwony=0
+        niebieski=0
+        zloty=0
+
+        #print(kolor)
+        d={}
+        for x in id:
+            qur = session.query(hero).filter(hero.c.ID.in_(id)).where(hero.c.ID == x)
+            kolor =([i.Kolor for i in qur])
+            d[x]=kolor
+
+        #print('slownik',d)
+        for x in d:
+            if 'Zielony' in d[x]:
+                zielony+=1
+            if 'Niebieski' in d[x]:
+                niebieski+=1
+            if 'Czerwony' in d[x]:
+                czerwony+=1
+            if 'Zloty' in d[x]:
+                zloty+=1
+        lista = []
+        for x in id:
+            if zielony > 1 and 'Zielony' in d[x]:
+                lista.append(x)
+            if niebieski > 1 and 'Niebieski' in d[x]:
+                lista.append(x)
+            if czerwony > 1 and 'Czerwony' in d[x]:
+                lista.append(x)
+            if zloty > 1 and 'Zloty' in d[x]:
+                lista.append(x)
+                #return d[x]
+        #print(zielony, niebieski, czerwony, zloty)
+        self.lista =lista
+        return(lista)
+
+    def hero_laczenie(self):
+        print(self.lista)
+        qry = session.query(hero_laczenie).filter(hero_laczenie.c.ID.in_(self.lista)).all()
+        qry = sorted(qry, key=lambda o: self.lista.index(o.ID))
+        print(qry)
+        atak_laczenie = sum([i.Atak for i in qry])
+        print("ataak", atak_laczenie)
+        monety_laczenie = sum([i.Monety for i in qry])
+        print("monety", monety_laczenie)
+        zdrowie_laczenie = sum([i.Zdrowie for i in qry])
+
+        self.atak = self.atak + atak_laczenie
+        self.monety = self.monety + monety_laczenie
+        self.zycie = self.zycie + zdrowie_laczenie
 
 
 
 
 partia = None
 ID_GRACZA = 0
+powodzenie = None
+wylozono = None
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -226,7 +289,7 @@ def index():
 
 @app.route('/plansza', methods=['GET', 'POST'])
 def plansza():
-    global partia, ID_GRACZA
+    global partia, ID_GRACZA, powodzenie, wylozono
 
     if partia is None:
         return redirect("/")
@@ -236,6 +299,10 @@ def plansza():
             aktualny.wyloz_karty()
             aktualny.sumuj_monety()
             aktualny.sumuj_atak()
+            aktualny.sumuj_zdrowie()
+            aktualny.kolor()
+            aktualny.hero_laczenie()
+            wylozono = 1
         if request.form['action'] == "Zakoncz ture":
             aktualny.koniec_tury()
             if len(aktualny.talia) == 0:
@@ -245,6 +312,8 @@ def plansza():
             aktualny.atak = 0
             ID_GRACZA += 1
             ID_GRACZA %= len(partia.gracze)
+            wylozono = 0
+            powodzenie = None
         if request.form['action'] == "KUP":
             sprzedane = partia.karta(request.form.getlist('karta', type=int))
             kupione = aktualny.kup(sprzedane)
@@ -254,6 +323,7 @@ def plansza():
             #atak = request.form.get('atak', type=int)
             #id= request.form.get('gracz', type=int)
             d = {}
+
             for i in range(len(partia.gracze)):
                 #id = request.form.get('gracz', type=int)
                 if i == ID_GRACZA:
@@ -263,7 +333,8 @@ def plansza():
             print('slownik', slownik)
             x = list(slownik.keys())
             print('gracze',x)
-            if  aktualny.suma(slownik) <= aktualny.atak:
+
+            if aktualny.suma(slownik) <= aktualny.atak:
                 print(aktualny.suma(slownik) )
                 for i in x:
                     atak = request.form.get(f'atak{i + 1}', type=int)
@@ -274,16 +345,14 @@ def plansza():
                         del x[i]
                         #ID_GRACZA %= len(partia.gracze)
                     if len(partia.gracze) == 1:
-                        return redirect("/create")
+                        return redirect("/win")
                 ID_GRACZA %= len(partia.gracze)
                 aktualny.odejmij_atak(slownik)
+                powodzenie = 1
             else:
-                return "blad"
+                powodzenie = 0
 
-
-
-
-    return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA)
+    return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA, wylozono=wylozono, powodzenie=powodzenie)
 
 
 @app.route('/create', methods=['GET', 'POST'])
@@ -300,7 +369,20 @@ def create():
 
 @app.route('/cards', methods=['GET', 'POST'])
 def cards():
-    return render_template("cards.html", result=engine.execute(hero_select), result2=engine.execute(reka_select))
+    global partia, ID_GRACZA
+    if partia is None:
+        return redirect("/plansza")
+
+    return render_template("cards.html", partia=partia, aktywny_gracz=ID_GRACZA)
+
+@app.route('/win', methods=['GET', 'POST'])
+def win():
+    global partia, ID_GRACZA
+    if partia is None:
+        return redirect("/start")
+
+    return render_template("win.html", partia=partia, aktywny_gracz=ID_GRACZA)
+
 
 
 if __name__ == '__main__':

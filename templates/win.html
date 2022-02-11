@@ -4,12 +4,10 @@
         <title>Hero realms</title>
         <link rel="icon" href="../static/logo.png" type="image/icon type">
 	</head>
-	<body id="body_start">
+	<body>
     <img src="../static/logo.png" alt="logo" />
-    <div id="start">
-        <form action="{{url_for('create')}}" method="get">
-            <input type="submit" value="Rozpocznij" class="button" id="button_start">
-        </form>
+    <div>
+        <h1>Wygrał(a): {{ partia.gracze[aktywny_gracz].nazwa }}</h1>
     </div>
 	</body>
 </html>
