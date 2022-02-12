@@ -112,7 +112,7 @@ class Gracz:
         self.lista = []
         self.monety = 0
         self.atak = 0
-        self.zycie = 2
+        self.zycie = 10
         self.dict = {}
         self.talia_gracz()
         self.potasuj()
@@ -124,9 +124,9 @@ class Gracz:
         shuffle(self.talia)
 
     def wyloz_karty(self):
-        self.reka= [9, 13, 36, 37, 52, 44,5]
-    #    self.reka = self.talia[:5]
-    #    del self.talia[:5]
+        #self.reka= [9, 13, 36, 37, 52, 44,5, 31]
+        self.reka = self.talia[:5]
+        del self.talia[:5]
 
     def zdjecie_wyswietl(self):
         qur2 = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
@@ -135,14 +135,25 @@ class Gracz:
         return zdjecie
 
     def zobacz_karty(self):
-
         qur2 = session.query(hero).filter(hero.c.ID.in_(self.odrzucone)).all()
         qur2 = sorted(qur2, key=lambda o: self.odrzucone.index(o.ID))
         zdjecie = ([i.Zdjecie for i in qur2])
         return zdjecie
 
     def dobierz_karte(self):
-        self.reka = self.talia[1]
+        qur2 = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
+        qur2 = sorted(qur2, key=lambda o: self.reka.index(o.ID))
+        zdolnosci = ([i.Inne_zdolnosci for i in qur2])
+        for i in zdolnosci:
+            if i == 'Dobierz karte':
+                self.reka.append(self.talia[1])
+            if i == 'Dobierz 2 karty':
+                self.reka.append(self.talia[2])
+            if i == 'Wybrany przeciwnik odrzuca karte':
+                print("Wybrany przeciwnik odrzuca karte")
+            if i == 'Odrzuc karte z reki lub ze stosu kart odrzuconych':
+                print("Odrzuc karte z reki lub ze stosu kart odrzuconych")
+        print (zdolnosci)
 
     def odrzuc_karte(self):
         self.odrzucone.extend(self.talia[1])
@@ -153,9 +164,10 @@ class Gracz:
         del self.reka[:]
 
     def koniec_talii(self):
+        shuffle(self.odrzucone)
         self.talia.extend(self.odrzucone[:])
         del self.odrzucone[:]
-        shuffle(self.talia)
+        #shuffle(self.talia)
 
     def kup(self, sprzedane):
         if sprzedane != None:
@@ -176,7 +188,7 @@ class Gracz:
         qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
         monety = sum([i.Monety for i in qry])
         nazwy = ([i.Nazwa for i in qry])
-        self.monety = monety
+        self.monety = monety + 100
         return self.monety
 
     def sumuj_atak(self):
@@ -269,6 +281,13 @@ class Gracz:
         monety_laczenie = sum([i.Monety for i in qry])
         print("monety", monety_laczenie)
         zdrowie_laczenie = sum([i.Zdrowie for i in qry])
+        zdolnosci = ([i.Inne_zdolnosci for i in qry])
+        for i in zdolnosci:
+            if i == 'Dobierz karte':
+                self.reka.append(self.talia[1])
+            if i == 'Dobierz 2 karty':
+                self.reka.append(self.talia[2])
+
 
         self.atak = self.atak + atak_laczenie
         self.monety = self.monety + monety_laczenie
@@ -296,17 +315,21 @@ def plansza():
     if request.method == 'POST':
         aktualny = partia.gracze[ID_GRACZA]
         if request.form['action'] == "Wyloz karty":
+            if len(aktualny.talia) < 5:
+                aktualny.koniec_talii()
             aktualny.wyloz_karty()
+            aktualny.dobierz_karte()
             aktualny.sumuj_monety()
             aktualny.sumuj_atak()
             aktualny.sumuj_zdrowie()
             aktualny.kolor()
             aktualny.hero_laczenie()
+
             wylozono = 1
         if request.form['action'] == "Zakoncz ture":
             aktualny.koniec_tury()
-            if len(aktualny.talia) == 0:
-                aktualny.koniec_talii()
+            #if len(aktualny.talia) < 5:
+            #    aktualny.koniec_talii()
             partia.wystaw()
             aktualny.monety = 0
             aktualny.atak = 0
@@ -342,7 +365,7 @@ def plansza():
                     partia.gracze[i].atakuj(atak)
                     if partia.gracze[i].zycie <= 0:
                         partia.przegrane(i)
-                        del x[i]
+                        #del x[i]
                         #ID_GRACZA %= len(partia.gracze)
                     if len(partia.gracze) == 1:
                         return redirect("/win")
