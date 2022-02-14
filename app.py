@@ -95,11 +95,14 @@ class Partia:
         qur2 = sorted(qur2, key=lambda o: self.sklep_wystawione.index(o.ID))
         cena = ([i.Cena for i in qur2])
         return cena
-    def atak(self,atak):
-        return atak
 
-    def przegrane(self, i):
-        del self.gracze[i]
+    def przegrane(self, y):
+        przegrane=[]
+        przegrane.append(y)
+        #del self.gracze[i]
+        print(przegrane)
+        for x in przegrane:
+            del self.gracze[x]
 
 class Gracz:
     def __init__(self, imie='Nieznane'):
@@ -194,7 +197,7 @@ class Gracz:
     def sumuj_atak(self):
         qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
         atak = sum([i.Atak for i in qry])
-        self.atak = atak
+        self.atak = atak + 100
         return self.atak
     def sumuj_zdrowie(self):
         qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
@@ -216,13 +219,13 @@ class Gracz:
 
     def suma(self, slownik):
         slownik_1 = slownik
-        print('SLOWNIK', slownik_1)
+       # print('SLOWNIK', slownik_1)
         atak = list(slownik_1.values())
-        print('atak', atak)
+       # print('atak', atak)
         suma = 0
         for x in atak:
             suma +=x
-        print('suma',suma)
+       # print('suma',suma)
         return suma
 
     def odejmij_atak(self,slownik):
@@ -242,7 +245,8 @@ class Gracz:
         #print(kolor)
         d={}
         for x in id:
-            qur = session.query(hero).filter(hero.c.ID.in_(id)).where(hero.c.ID == x)
+            qur = session.query(hero).filter(hero.c.ID.in_(id)).filter(hero.c.ID == x)
+            #print(qur)
             kolor =([i.Kolor for i in qur])
             d[x]=kolor
 
@@ -272,14 +276,14 @@ class Gracz:
         return(lista)
 
     def hero_laczenie(self):
-        print(self.lista)
+        #print(self.lista)
         qry = session.query(hero_laczenie).filter(hero_laczenie.c.ID.in_(self.lista)).all()
         qry = sorted(qry, key=lambda o: self.lista.index(o.ID))
-        print(qry)
+        #print(qry)
         atak_laczenie = sum([i.Atak for i in qry])
-        print("ataak", atak_laczenie)
+        #print("ataak", atak_laczenie)
         monety_laczenie = sum([i.Monety for i in qry])
-        print("monety", monety_laczenie)
+        #print("monety", monety_laczenie)
         zdrowie_laczenie = sum([i.Zdrowie for i in qry])
         zdolnosci = ([i.Inne_zdolnosci for i in qry])
         for i in zdolnosci:
@@ -353,27 +357,30 @@ def plansza():
                     continue
                 atak = request.form.get(f'atak{i+1}', type=int)
                 slownik =partia.gracze[i].slownik(i, atak, d)
-            print('slownik', slownik)
+            #print('slownik', slownik)
             x = list(slownik.keys())
-            print('gracze',x)
+            #print('gracze',x)
 
             if aktualny.suma(slownik) <= aktualny.atak:
-                print(aktualny.suma(slownik) )
+                print(aktualny.suma(slownik))
                 for i in x:
                     atak = request.form.get(f'atak{i + 1}', type=int)
                     print("dla gracza, atak", i, atak)
                     partia.gracze[i].atakuj(atak)
-                    if partia.gracze[i].zycie <= 0:
-                        partia.przegrane(i)
-                        #del x[i]
-                        #ID_GRACZA %= len(partia.gracze)
-                    if len(partia.gracze) == 1:
-                        return redirect("/win")
-                ID_GRACZA %= len(partia.gracze)
+
+                #ID_GRACZA %= len(partia.gracze)
                 aktualny.odejmij_atak(slownik)
                 powodzenie = 1
+                for y in range(len(partia.gracze)):
+                    if partia.gracze[y].zycie <= 0:
+                        partia.przegrane(y)
+                        # del x[i]
+                    if len(partia.gracze) == 1:
+                        return redirect("/win")
+                    ID_GRACZA %= len(partia.gracze)
             else:
                 powodzenie = 0
+
 
     return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA, wylozono=wylozono, powodzenie=powodzenie)
 
@@ -405,8 +412,6 @@ def win():
         return redirect("/start")
 
     return render_template("win.html", partia=partia, aktywny_gracz=ID_GRACZA)
-
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port='5122', debug=True)

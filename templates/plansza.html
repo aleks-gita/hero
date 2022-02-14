@@ -12,53 +12,6 @@
     </div>
 	<h1>ROZGRYWA:{{partia.gracze[aktywny_gracz].nazwa}}</h1>
 
-	<table>
-		<tr>
-			<th>Sklep talia</th>
-		</tr>
-		<tr>
-			<td>{{partia.sklep_talia}}</td>
-		</tr>
-		<tr>
-			<th>Sklep wystawione</th>
-		</tr>		
-		<tr>
-			<form action="{{url_for('plansza')}}" method="post">
-				<td>{% for karta in partia.zdjecie_wyswietl()%}
-					<input type="checkbox" name="karta" value="{{loop.index0}}">
-                    <label for="id_{{karta}}"><img src="{{karta}}" alt="karta" width="215" height="319"/></label>
-				{% endfor%}</td>
-                <input type="submit" name="action" value="KUP" class="button">
-            </form>
-        <tr>
-             <td>
-            {% for cena in partia.cena() %}
-                  {{cena}}
-            {% endfor %}
-             </td>
-        </tr>
-        <tr>
-            <td>
-            <form action="{{url_for('plansza')}}" method="post">
-                {% for gracz in partia.gracze %}
-                    {% if gracz != partia.gracze[aktywny_gracz] %}
-                        <input type="hidden"name="gracz" value="{{loop.index}}">
-                        <label> Zaatakuj: {{gracz.nazwa }}</label>
-                        <input id="atak" type="number" id="quantity" name="atak{{loop.index}}" min="0" max="{{partia.gracze[aktywny_gracz].atak}}" value="0">
-                    {% endif %}
-                {% endfor %}
-            <input type="submit" name="action" value="Zadaj atak" class="button">
-            </form>
-            </td>
-        </tr>
-	</table>
-    <div id="atak_info">
-        {% if powodzenie == 0 %}
-            <p>Przekroczyłeś sumę ataku</p>
-        {% elif powodzenie == 1 %}
-            <p>Zadano atak</p>
-        {%  endif %}
-    </div>
 	<h2>GRACZE</h2>
 	<table>
 		{% for gracz in partia.gracze %}
@@ -106,6 +59,56 @@
 	<form action="{{url_for('cards')}}" method="get">
 		<input type="submit" name="action" value="Pokarz moje karty odrzucone" class="button">
 	</form>
+    	<table>
+          <tr>
+            <td>
+            <form action="{{url_for('plansza')}}" method="post">
+                {% for gracz in partia.gracze %}
+                    {% if gracz != partia.gracze[aktywny_gracz] %}
+                        <input type="hidden"name="gracz" value="{{loop.index}}">
+                        <label> Zaatakuj: {{gracz.nazwa }}</label>
+                        <input id="atak" type="number" id="quantity" name="atak{{loop.index}}" min="0" max="{{partia.gracze[aktywny_gracz].atak}}" value="0">
+                    {% endif %}
+                {% endfor %}
+            <input type="submit" name="action" value="Zadaj atak" class="button">
+            </form>
+            </td>
+        <div id="atak_info">
+        {% if powodzenie == 0 %}
+            <p>Przekroczyłeś sumę ataku</p>
+        {% elif powodzenie == 1 %}
+            <p>Zadano atak</p>
+        {%  endif %}
+        </div>
+        </tr>
+        </table>
+        <table>
+		<tr>
+			<th>Sklep talia</th>
+		</tr>
+		<tr>
+			<td>{{partia.sklep_talia}}</td>
+		</tr>
+		<tr>
+			<th>Sklep wystawione</th>
+		</tr>
+		<tr>
+			<form action="{{url_for('plansza')}}" method="post">
+				<td>{% for karta in partia.zdjecie_wyswietl()%}
+					<input type="checkbox" name="karta" value="{{loop.index0}}">
+                    <label for="id_{{karta}}"><img src="{{karta}}" alt="karta" width="215" height="319"/></label>
+				{% endfor%}</td>
+                <input type="submit" name="action" value="KUP" class="button">
+            </form>
+        <tr>
+             <td>
+            {% for cena in partia.cena() %}
+                  {{cena}}
+            {% endfor %}
+             </td>
+        </tr>
+	</table>
+
 
 	</body>
 </html>
