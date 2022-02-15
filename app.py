@@ -374,13 +374,17 @@ def plansza():
                     partia.gracze[i].atakuj(atak)
                 #ID_GRACZA %= len(partia.gracze)
                 aktualny.odejmij_atak(slownik)
+                for gracz in partia.gracze:
+                    index = partia.gracze.index(gracz)
+                    print(index)
+                    [partia.przegrane(gracz) for gracz in partia.gracze if gracz.zycie <= 0]
+                    ID_GRACZA = partia.gracze.index(aktualny)
+                    if len(partia.gracze) == 1:
+                        return redirect("/win")
                 powodzenie = 1
             else:
                 powodzenie = 0
-                [partia.przegrane(gracz) for gracz in partia.gracze if gracz.zycie <= 0]
-                ID_GRACZA = partia.gracze.index(aktualny)
-                if len(partia.gracze) == 1:
-                    return redirect("/win")
+
 
 
     return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA, wylozono=wylozono, powodzenie=powodzenie)
