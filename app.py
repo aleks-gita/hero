@@ -97,12 +97,17 @@ class Partia:
         return cena
 
     def przegrane(self, y):
-        przegrane=[]
-        przegrane.append(y)
-        #del self.gracze[i]
-        print(przegrane)
-        for x in przegrane:
-            del self.gracze[x]
+        pass
+      #  przegrane=[]
+      #  przegrane.append(y)
+      #  #del self.gracze[i]
+      #  print(przegrane)
+      #  for x in przegrane:
+      #      del self.gracze[x]
+
+    def przegrane(self, gracz):
+        self.gracze.remove(gracz)
+
 
 class Gracz:
     def __init__(self, imie='Nieznane'):
@@ -367,19 +372,15 @@ def plansza():
                     atak = request.form.get(f'atak{i + 1}', type=int)
                     print("dla gracza, atak", i, atak)
                     partia.gracze[i].atakuj(atak)
-
                 #ID_GRACZA %= len(partia.gracze)
                 aktualny.odejmij_atak(slownik)
                 powodzenie = 1
-                for y in range(len(partia.gracze)):
-                    if partia.gracze[y].zycie <= 0:
-                        partia.przegrane(y)
-                        # del x[i]
-                    if len(partia.gracze) == 1:
-                        return redirect("/win")
-                    ID_GRACZA %= len(partia.gracze)
             else:
                 powodzenie = 0
+                [partia.przegrane(gracz) for gracz in partia.gracze if gracz.zycie <= 0]
+                ID_GRACZA = partia.gracze.index(aktualny)
+                if len(partia.gracze) == 1:
+                    return redirect("/win")
 
 
     return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA, wylozono=wylozono, powodzenie=powodzenie)
