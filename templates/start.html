@@ -8,8 +8,12 @@
     <img src="../static/logo.png" alt="logo" />
     <div id="start">
         <form action="{{url_for('create')}}" method="get">
-            <input type="submit" value="Rozpocznij" class="button" id="button_start">
+            <input type="submit" value="Hot-seat" class="button" id="button_start">
+        </form>
+        <form action="{{url_for('create_komputer')}}" method="get">
+            <input type="submit" value="Z komputerem" class="button" id="button_start">
         </form>
     </div>
+
 	</body>
 </html>

@@ -1,0 +1,17 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href='/static/style.css' />
+	<title>Hero realms</title>
+    <link rel="icon" href="../static/logo.png" type="image/icon type">
+</head>
+<body id="body_create">
+    <div id="form_create">
+	<form action="{{url_for('create_komputer')}}" method="post">
+		<div>Gracz 1:<input name="gracz1" value='gracz1' class="gracz"></div>
+		<div>Gracz 2:<input name="gracz2" value='gracz2' class="gracz"></div>
+		<div>Gracz 3:<input name="gracz3" value='gracz3' class="gracz"></div>
+		<input type="submit" value="Dołącz do gry" class="button">
+	</form>
+    </div>
+</body>
+</html>
