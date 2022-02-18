@@ -11,6 +11,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 from gracz import Gracz
 from partia import Partia
+import time
 
 app = Flask(__name__)
 
@@ -38,13 +39,13 @@ def plansza():
                 aktualny.koniec_talii()
             aktualny.wyloz_karty()
             aktualny.dobierz_karte()
-            aktualny.sumuj_monety()
-            aktualny.sumuj_atak()
-            aktualny.sumuj_zdrowie()
             aktualny.kolor()
             aktualny.hero_laczenie()
             aktualny.wszystkie_karty()
             aktualny.kolor_talia()
+            aktualny.sumuj_monety()
+            aktualny.sumuj_atak()
+            aktualny.sumuj_zdrowie()
             wylozono = 1
         if request.form['action'] == "Zakoncz ture":
             aktualny.koniec_tury()
@@ -58,8 +59,10 @@ def plansza():
             wylozono = 0
             powodzenie = None
             if partia.gracze[ID_GRACZA].nazwa == 'komputer':
+                time.sleep(3)
                 aktualny = partia.gracze[ID_GRACZA]
                 partia.gracze[ID_GRACZA].komputer()
+                #kupowanie
                 kolorek=partia.gracze[ID_GRACZA].kolor_talia()
                 odrzucone = partia.gracze[ID_GRACZA].wszystkie
                 sprzedane= partia.kolor_sklep(kolorek, odrzucone)
@@ -69,6 +72,7 @@ def plansza():
                     sprzedane = partia.inne()
                     kupione = partia.gracze[ID_GRACZA].kup(sprzedane)
                 partia.aktualizuj_sklep(kupione)
+                #atakowanie
                 d = {}
                 lista_zyc =[]
                 if partia.gracze[ID_GRACZA].atak % 3 == 0:
@@ -112,6 +116,7 @@ def plansza():
                 partia.gracze[ID_GRACZA].atak = 0
                 partia.gracze[ID_GRACZA].koniec_tury()
                 partia.wystaw()
+
                 ID_GRACZA += 1
                 ID_GRACZA %= len(partia.gracze)
 

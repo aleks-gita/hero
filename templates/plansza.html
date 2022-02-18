@@ -55,7 +55,7 @@
 
     <div id="reka">
         {% for karta in partia.gracze[aktywny_gracz].zdjecie_wyswietl()%}
-			<td><img src="{{karta}}" alt="karta" width="100" height="139"/></td>
+			<td><img src="{{karta}}" alt="karta" width="150" height="210"/></td>
         {% endfor %}
         {% for kolor in partia.gracze[aktywny_gracz].kolor()%}
         	<td>{{kolor}}</td>
@@ -135,9 +135,6 @@
              </td>
         </tr>
 	    </table>
-    </div>>
-
-
-
+    </div>
 	</body>
 </html>

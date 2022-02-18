@@ -48,7 +48,7 @@ class Gracz:
         self.lista = []
         self.monety = 0
         self.atak = 0
-        self.zycie = 5
+        self.zycie = 20
         self.dict = {}
         self.talia_gracz()
         self.potasuj()
@@ -88,11 +88,6 @@ class Gracz:
                 self.reka.append(self.talia[1])
             if i == 'Dobierz 2 karty':
                 self.reka.append(self.talia[2])
-            if i == 'Wybrany przeciwnik odrzuca karte':
-                print("Wybrany przeciwnik odrzuca karte")
-            if i == 'Odrzuc karte z reki lub ze stosu kart odrzuconych':
-                print("Odrzuc karte z reki lub ze stosu kart odrzuconych")
-        print (zdolnosci)
 
     def odrzuc_karte(self):
         self.odrzucone.extend(self.talia[1])
@@ -177,12 +172,10 @@ class Gracz:
         czerwony=0
         niebieski=0
         zloty=0
-
         #print(kolor)
         d={}
         for x in id:
             qur = session.query(hero).filter(hero.c.ID.in_(id)).filter(hero.c.ID == x)
-            #print(qur)
             kolor =([i.Kolor for i in qur])
             d[x]=kolor
 
@@ -210,6 +203,8 @@ class Gracz:
         #print(zielony, niebieski, czerwony, zloty)
         self.lista =lista
         return(lista)
+    def cena_kolor(self):
+        pass
 
     def wszystkie_karty(self):
         self.wszystkie.extend(self.reka[:])
@@ -281,20 +276,20 @@ class Gracz:
         self.atak = self.atak + atak_laczenie
         self.monety = self.monety + monety_laczenie
         self.zycie = self.zycie + zdrowie_laczenie
-    def cena_kolor(self):
-        pass
+
     def komputer(self):
         if len(self.talia) < 5:
             self.koniec_talii()
         self.wyloz_karty()
         self.dobierz_karte()
-        self.sumuj_monety()
-        self.sumuj_atak()
-        self.sumuj_zdrowie()
         self.kolor()
         self.hero_laczenie()
         self.wszystkie_karty()
         self.kolor_talia()
+        self.sumuj_monety()
+        self.sumuj_atak()
+        self.sumuj_zdrowie()
+
 
 
 

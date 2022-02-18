@@ -128,6 +128,7 @@ h1{
   text-align: center;
 }
 #tabela {
+    font-size: 20px;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.500);
 }
@@ -139,6 +140,7 @@ h1{
 td {
   text-align: center;
   vertical-align: middle;
+  font-size: 20px;
 }
 
 #tabela th {
@@ -175,6 +177,7 @@ td {
     text-align: center;
 }
 #reka{
+    padding: 20px;
     text-align: center;
 }
 #karty{
