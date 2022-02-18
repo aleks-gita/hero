@@ -13,44 +13,49 @@
     <div id="logo_plansza">
         <img src="../static/logo.png" alt="logo" width="250" height="111" />
     </div>
+    <form action="{{url_for('index')}}" method="get">
+            <input type= "submit" name="action" value="Powrot do startu" class="button">
+    </form>
 	<h1 id="rozgrywa">ROZGRYWA: {{partia.gracze[aktywny_gracz].nazwa}}</h1>
-
-    <table id="tabela_zycie">
-    <tr>
-        <th>GRACZ</th>
-        <th>ŻYCIE</th>
-    </tr>
-    {% for gracz in partia.gracze %}
+    <div id="tabelka">
+        <table id="tabela_zycie" align="center">
         <tr>
-            <td>{{gracz.nazwa}}</td>
-            <td>{{gracz.zycie}}</td>
+            <th>GRACZ</th>
+            <th>ŻYCIE</th>
         </tr>
-    {% endfor %}
-    </table>
+        {% for gracz in partia.gracze %}
+            <tr>
+
+                <td>{{gracz.nazwa}}</td>
+                <td>{{gracz.zycie}}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
 
 	<table id="tabela">
+ <h2>GRACZE</h2>
+		{% for gracz in partia.gracze %}
+
 
 		<tr>
 			<th>Nazwa</th>
-            <!--
 			<th>Talia kart osobistych</th>
 			<th>Reka</th>
 			<th>Talia kart odrzuconych</th>
-			-->
-            <th>Suma monet na ręce</th>
-            <th>Suma ataku na ręce</th>
-            <th>Życie</th>
+            <th>Suma monet na rece</th>
+            <th>Suma ataku na rece</th>
 		</tr>
 		<tr>
-			<td>{{partia.gracze[aktywny_gracz].nazwa}}</td>
-            <!--
-
-			-->
-            <td>{{partia.gracze[aktywny_gracz].monety}}</td>
-            <td>{{partia.gracze[aktywny_gracz].atak}}</td>
-            <td>zycie: {{partia.gracze[aktywny_gracz].zycie}}</td>
+			<td>{{gracz.nazwa}}</td>
+			<td>{{gracz.talia}}</td>
+            <td>{{gracz.reka}}</td>
+			<td>{{gracz.odrzucone}}</td>
+            <td>{{gracz.monety}}</td>
+            <td>{{gracz.atak}}</td>
+            <td>zycie: {{gracz.zycie}}</td>
 		</tr>
-
+{% endfor%}
 	</table>
 
     <div id="reka">

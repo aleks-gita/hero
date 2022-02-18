@@ -85,9 +85,16 @@ class Gracz:
         zdolnosci = ([i.Inne_zdolnosci for i in qur2])
         for i in zdolnosci:
             if i == 'Dobierz karte':
-                self.reka.append(self.talia[1])
+                if self.talia != []:
+                    self.reka.append(self.talia[1])
+                else:
+                    self.reka.append(self.odrzucone[1])
+
             if i == 'Dobierz 2 karty':
-                self.reka.append(self.talia[2])
+                if self.talia != []:
+                    self.reka.append(self.talia[2])
+                else:
+                    self.reka.append(self.odrzucone[2])
 
     def odrzuc_karte(self):
         self.odrzucone.extend(self.talia[1])
@@ -150,12 +157,12 @@ class Gracz:
 
     def suma(self, slownik):
         slownik_1 = slownik
-       # print('SLOWNIK', slownik_1)
+        print('SLOWNIK', slownik_1)
         atak = list(slownik_1.values())
-       # print('atak', atak)
+        print('atak', atak)
         suma = 0
         for x in atak:
-            suma +=x
+            suma += x
        # print('suma',suma)
         return suma
 
@@ -268,9 +275,16 @@ class Gracz:
         zdolnosci = ([i.Inne_zdolnosci for i in qry])
         for i in zdolnosci:
             if i == 'Dobierz karte':
-                self.reka.append(self.talia[1])
+                if self.talia != []:
+                    self.reka.append(self.talia[1])
+                else:
+                    self.reka.append(self.odrzucone[1])
+
             if i == 'Dobierz 2 karty':
-                self.reka.append(self.talia[2])
+                if self.talia != []:
+                    self.reka.append(self.talia[2])
+                else:
+                    self.reka.append(self.odrzucone[2])
 
 
         self.atak = self.atak + atak_laczenie

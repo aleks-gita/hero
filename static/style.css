@@ -132,11 +132,15 @@ h1{
   width: 100%;
   background-color: rgba(0, 0, 0, 0.500);
 }
+#tabelka{
+    text-align: center;
+}
 #tabela_zycie{
+    text-align: center;
     background-color: rgba(0, 0, 0, 0.500);
     color: white;
+    padding: 15px;
 }
-
 td {
   text-align: center;
   vertical-align: middle;

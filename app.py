@@ -47,6 +47,39 @@ def plansza():
             aktualny.sumuj_atak()
             aktualny.sumuj_zdrowie()
             wylozono = 1
+
+        if request.form['action'] == "KUP":
+            sprzedane = partia.karta(request.form.getlist('karta', type=int))
+            kupione = aktualny.kup(sprzedane)
+            partia.aktualizuj_sklep(kupione)
+
+        if request.form['action'] == "Zadaj atak":
+            d = {}
+            for i in range(len(partia.gracze)):
+                if i == ID_GRACZA:
+                    continue
+                atak = request.form.get(f'atak{i+1}', type=int)
+                slownik =partia.gracze[i].slownik(i, atak, d)
+            print("irew", slownik)
+            x = list(slownik.keys())
+            if aktualny.suma(slownik) <= aktualny.atak:
+                print("JJJJ", aktualny.suma(slownik))
+                for i in x:
+                    atak = request.form.get(f'atak{i + 1}', type=int)
+                    print("dla gracza, atak", i, atak)
+                    partia.gracze[i].atakuj(atak)
+                #ID_GRACZA %= len(partia.gracze)
+                aktualny.odejmij_atak(slownik)
+                for gracz in partia.gracze:
+                    index = partia.gracze.index(gracz)
+                    print(index)
+                    [partia.przegrane(gracz) for gracz in partia.gracze if gracz.zycie <= 0]
+                    ID_GRACZA = partia.gracze.index(aktualny)
+                    if len(partia.gracze) == 1:
+                        return redirect("/win")
+                powodzenie = 1
+            else:
+                powodzenie = 0
         if request.form['action'] == "Zakoncz ture":
             aktualny.koniec_tury()
             if len(aktualny.talia) < 5:
@@ -62,31 +95,31 @@ def plansza():
                 time.sleep(3)
                 aktualny = partia.gracze[ID_GRACZA]
                 partia.gracze[ID_GRACZA].komputer()
-                #kupowanie
-                kolorek=partia.gracze[ID_GRACZA].kolor_talia()
+                # kupowanie
+                kolorek = partia.gracze[ID_GRACZA].kolor_talia()
                 odrzucone = partia.gracze[ID_GRACZA].wszystkie
-                sprzedane= partia.kolor_sklep(kolorek, odrzucone)
+                sprzedane = partia.kolor_sklep(kolorek, odrzucone)
                 if partia.karty_komp() <= partia.gracze[ID_GRACZA].monety:
                     kupione = partia.gracze[ID_GRACZA].kup(sprzedane)
                 else:
                     sprzedane = partia.inne()
                     kupione = partia.gracze[ID_GRACZA].kup(sprzedane)
                 partia.aktualizuj_sklep(kupione)
-                #atakowanie
+                # atakowanie
                 d = {}
-                lista_zyc =[]
-                if partia.gracze[ID_GRACZA].atak % 3 == 0:
+                lista_zyc = []
+                if partia.gracze[ID_GRACZA].atak % (len(partia.gracze) - 1) == 0:
                     for i in range(len(partia.gracze)):
                         if i == ID_GRACZA:
-                           continue
-                        atak = partia.gracze[ID_GRACZA].atak // 3
+                            continue
+                        atak = partia.gracze[ID_GRACZA].atak // (len(partia.gracze) - 1)
                         slownik = partia.gracze[i].slownik(i, atak, d)
                 else:
                     atak = partia.gracze[ID_GRACZA].atak
                     slownik = partia.gracze[ID_GRACZA].slownik(ID_GRACZA, atak, d)
                 x = list(slownik.keys())
                 if partia.gracze[ID_GRACZA].suma(slownik) <= partia.gracze[ID_GRACZA].atak:
-                    if partia.gracze[ID_GRACZA].atak % 3 == 0:
+                    if partia.gracze[ID_GRACZA].atak % (len(partia.gracze) - 1) == 0:
                         atak = partia.gracze[ID_GRACZA].atak // (len(partia.gracze) - 1)
                         for i in x:
                             if i == ID_GRACZA:
@@ -101,7 +134,7 @@ def plansza():
                                 continue
                             lista_zyc.append(partia.gracze[i].zycie)
                         max_value = max(lista_zyc)
-                        max_index =  lista_zyc.index(max_value)
+                        max_index = lista_zyc.index(max_value)
                         partia.gracze[max_index].atakuj(atak)
                     partia.gracze[ID_GRACZA].odejmij_atak(slownik)
 
@@ -119,38 +152,6 @@ def plansza():
 
                 ID_GRACZA += 1
                 ID_GRACZA %= len(partia.gracze)
-
-        if request.form['action'] == "KUP":
-            sprzedane = partia.karta(request.form.getlist('karta', type=int))
-            kupione = aktualny.kup(sprzedane)
-            partia.aktualizuj_sklep(kupione)
-
-        if request.form['action'] == "Zadaj atak":
-            d = {}
-            for i in range(len(partia.gracze)):
-                if i == ID_GRACZA:
-                    continue
-                atak = request.form.get(f'atak{i+1}', type=int)
-                slownik =partia.gracze[i].slownik(i, atak, d)
-            x = list(slownik.keys())
-            if aktualny.suma(slownik) <= aktualny.atak:
-                print(aktualny.suma(slownik))
-                for i in x:
-                    atak = request.form.get(f'atak{i + 1}', type=int)
-                    print("dla gracza, atak", i, atak)
-                    partia.gracze[i].atakuj(atak)
-                #ID_GRACZA %= len(partia.gracze)
-                aktualny.odejmij_atak(slownik)
-                for gracz in partia.gracze:
-                    index = partia.gracze.index(gracz)
-                    print(index)
-                    [partia.przegrane(gracz) for gracz in partia.gracze if gracz.zycie <= 0]
-                    ID_GRACZA = partia.gracze.index(aktualny)
-                    if len(partia.gracze) == 1:
-                        return redirect("/win")
-                powodzenie = 1
-            else:
-                powodzenie = 0
 
     return render_template('plansza.html', partia=partia, aktywny_gracz=ID_GRACZA, wylozono=wylozono, powodzenie=powodzenie)
 
