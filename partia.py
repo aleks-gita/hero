@@ -141,7 +141,7 @@ class Partia:
         return cena
 
     def inne(self):
-        self.sprzedane_komputer = self.sklep_wystawione[:1]
+        self.sprzedane_komputer = self.sklep_wystawione[:2]
         return self.sprzedane_komputer
 
     def karta_komputer(self, sprzedane):

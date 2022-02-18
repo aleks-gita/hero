@@ -83,18 +83,21 @@ class Gracz:
         qur2 = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
         qur2 = sorted(qur2, key=lambda o: self.reka.index(o.ID))
         zdolnosci = ([i.Inne_zdolnosci for i in qur2])
+        x = 0
         for i in zdolnosci:
             if i == 'Dobierz karte':
+                x += 1
                 if self.talia != []:
-                    self.reka.append(self.talia[1])
+                    self.reka.append(self.talia[x])
                 else:
-                    self.reka.append(self.odrzucone[1])
+                    self.reka.append(self.odrzucone[x])
 
             if i == 'Dobierz 2 karty':
+                x+=2
                 if self.talia != []:
-                    self.reka.append(self.talia[2])
+                    self.reka.append(self.talia[x])
                 else:
-                    self.reka.append(self.odrzucone[2])
+                    self.reka.append(self.odrzucone[x])
 
     def odrzuc_karte(self):
         self.odrzucone.extend(self.talia[1])
@@ -129,7 +132,7 @@ class Gracz:
         qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
         monety = sum([i.Monety for i in qry])
         nazwy = ([i.Nazwa for i in qry])
-        self.monety = monety
+        self.monety = monety + 10
         return self.monety
 
     def sumuj_atak(self):
@@ -210,6 +213,7 @@ class Gracz:
         #print(zielony, niebieski, czerwony, zloty)
         self.lista =lista
         return(lista)
+
     def cena_kolor(self):
         pass
 
@@ -263,33 +267,27 @@ class Gracz:
         return(a)
 
     def hero_laczenie(self):
-
         qry = session.query(hero_laczenie).filter(hero_laczenie.c.ID.in_(self.lista)).all()
         qry = sorted(qry, key=lambda o: self.lista.index(o.ID))
-
         atak_laczenie = sum([i.Atak for i in qry])
-
         monety_laczenie = sum([i.Monety for i in qry])
-
         zdrowie_laczenie = sum([i.Zdrowie for i in qry])
         zdolnosci = ([i.Inne_zdolnosci for i in qry])
-        for i in zdolnosci:
-            if i == 'Dobierz karte':
-                if self.talia != []:
-                    self.reka.append(self.talia[1])
-                else:
-                    self.reka.append(self.odrzucone[1])
-
-            if i == 'Dobierz 2 karty':
-                if self.talia != []:
-                    self.reka.append(self.talia[2])
-                else:
-                    self.reka.append(self.odrzucone[2])
-
-
         self.atak = self.atak + atak_laczenie
         self.monety = self.monety + monety_laczenie
         self.zycie = self.zycie + zdrowie_laczenie
+        x = 0
+        for i in zdolnosci:
+            if i == 'Dobierz karte':
+                x += 1
+            if i == 'Dobierz 2 karty':
+                x += 2
+        if x !=0:
+            if self.talia != []:
+                self.reka.append(self.talia[x])
+            else:
+                self.reka.append(self.odrzucone[x])
+
 
     def komputer(self):
         if len(self.talia) < 5:
@@ -297,12 +295,13 @@ class Gracz:
         self.wyloz_karty()
         self.dobierz_karte()
         self.kolor()
-        self.hero_laczenie()
         self.wszystkie_karty()
         self.kolor_talia()
         self.sumuj_monety()
         self.sumuj_atak()
         self.sumuj_zdrowie()
+        self.hero_laczenie()
+
 
 
 

@@ -40,12 +40,12 @@ def plansza():
             aktualny.wyloz_karty()
             aktualny.dobierz_karte()
             aktualny.kolor()
-            aktualny.hero_laczenie()
             aktualny.wszystkie_karty()
             aktualny.kolor_talia()
             aktualny.sumuj_monety()
             aktualny.sumuj_atak()
             aktualny.sumuj_zdrowie()
+            aktualny.hero_laczenie()
             wylozono = 1
 
         if request.form['action'] == "KUP":
@@ -133,9 +133,9 @@ def plansza():
                             if i == ID_GRACZA:
                                 continue
                             lista_zyc.append(partia.gracze[i].zycie)
-                        max_value = max(lista_zyc)
-                        max_index = lista_zyc.index(max_value)
-                        partia.gracze[max_index].atakuj(atak)
+                        min_value = min(lista_zyc)
+                        min_index = lista_zyc.index(min_value)
+                        partia.gracze[min_index].atakuj(atak)
                     partia.gracze[ID_GRACZA].odejmij_atak(slownik)
 
                     [partia.przegrane(gracz) for gracz in partia.gracze if gracz.zycie <= 0]
