@@ -48,7 +48,7 @@ class Gracz:
         self.lista = []
         self.monety = 0
         self.atak = 0
-        self.zycie = 10
+        self.zycie = 5
         self.dict = {}
         self.talia_gracz()
         self.potasuj()
@@ -215,7 +215,7 @@ class Gracz:
         self.wszystkie.extend(self.reka[:])
         self.wszystkie.extend(self.odrzucone[:])
         self.wszystkie.extend(self.talia[:])
-        print(self.wszystkie)
+        #print(self.wszystkie)
 
     def kolor_talia(self):
         #self.wszytkie = self.reka + self.odrzucone + self.talia()
@@ -257,7 +257,7 @@ class Gracz:
             a = 4 # 'czerwony'
 
       #  print(zielony, zloty, niebieski, czerwony)
-        print("AA", a)
+        #print("AA", a)
         return(a)
 
     def hero_laczenie(self):
@@ -281,7 +281,8 @@ class Gracz:
         self.atak = self.atak + atak_laczenie
         self.monety = self.monety + monety_laczenie
         self.zycie = self.zycie + zdrowie_laczenie
-
+    def cena_kolor(self):
+        pass
     def komputer(self):
         if len(self.talia) < 5:
             self.koniec_talii()
@@ -292,6 +293,8 @@ class Gracz:
         self.sumuj_zdrowie()
         self.kolor()
         self.hero_laczenie()
+        self.wszystkie_karty()
+        self.kolor_talia()
 
 
 

@@ -159,8 +159,6 @@ class Partia:
         cena = ([i.Cena for i in qur2])
         return cena
 
-    def przegrane(self, y):
-        pass
 
     #  przegrane=[]
     #  przegrane.append(y)

@@ -20,7 +20,7 @@ powodzenie = None
 wylozono = None
 
 
-
+@app.route('/start', methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('start.html')
@@ -58,14 +58,10 @@ def plansza():
             wylozono = 0
             powodzenie = None
             if partia.gracze[ID_GRACZA].nazwa == 'komputer':
-                print('komputer')
+                aktualny = partia.gracze[ID_GRACZA]
                 partia.gracze[ID_GRACZA].komputer()
-
                 kolorek=partia.gracze[ID_GRACZA].kolor_talia()
-                print("kolor2", kolorek)
-
                 odrzucone = partia.gracze[ID_GRACZA].wszystkie
-                print("GRACZ", odrzucone)
                 sprzedane= partia.kolor_sklep(kolorek, odrzucone)
                 if partia.karty_komp() <= partia.gracze[ID_GRACZA].monety:
                     kupione = partia.gracze[ID_GRACZA].kup(sprzedane)
@@ -73,14 +69,51 @@ def plansza():
                     sprzedane = partia.inne()
                     kupione = partia.gracze[ID_GRACZA].kup(sprzedane)
                 partia.aktualizuj_sklep(kupione)
+                d = {}
+                lista_zyc =[]
+                if partia.gracze[ID_GRACZA].atak % 3 == 0:
+                    for i in range(len(partia.gracze)):
+                        if i == ID_GRACZA:
+                           continue
+                        atak = partia.gracze[ID_GRACZA].atak // 3
+                        slownik = partia.gracze[i].slownik(i, atak, d)
+                else:
+                    atak = partia.gracze[ID_GRACZA].atak
+                    slownik = partia.gracze[ID_GRACZA].slownik(ID_GRACZA, atak, d)
+                x = list(slownik.keys())
+                if partia.gracze[ID_GRACZA].suma(slownik) <= partia.gracze[ID_GRACZA].atak:
+                    if partia.gracze[ID_GRACZA].atak % 3 == 0:
+                        atak = partia.gracze[ID_GRACZA].atak // (len(partia.gracze) - 1)
+                        for i in x:
+                            if i == ID_GRACZA:
+                                continue
+                            if partia.gracze[ID_GRACZA].atak % (len(partia.gracze) - 1) == 0:
+                                atak = partia.gracze[ID_GRACZA].atak // (len(partia.gracze) - 1)
+                            partia.gracze[i].atakuj(atak)
+                    else:
+                        atak = partia.gracze[ID_GRACZA].atak
+                        for i in range(len(partia.gracze)):
+                            if i == ID_GRACZA:
+                                continue
+                            lista_zyc.append(partia.gracze[i].zycie)
+                        max_value = max(lista_zyc)
+                        max_index =  lista_zyc.index(max_value)
+                        partia.gracze[max_index].atakuj(atak)
+                    partia.gracze[ID_GRACZA].odejmij_atak(slownik)
 
-
-                #partia.gracze[ID_GRACZA].monety = 0
-                #partia.gracze[ID_GRACZA].atak = 0
+                    [partia.przegrane(gracz) for gracz in partia.gracze if gracz.zycie <= 0]
+                    ID_GRACZA = partia.gracze.index(aktualny)
+                    if len(partia.gracze) == 1:
+                        return redirect("/win")
+                    powodzenie = 1
+                else:
+                    powodzenie = 0
+                partia.gracze[ID_GRACZA].monety = 0
+                partia.gracze[ID_GRACZA].atak = 0
                 partia.gracze[ID_GRACZA].koniec_tury()
                 partia.wystaw()
-                #ID_GRACZA += 1
-                #ID_GRACZA %= len(partia.gracze)
+                ID_GRACZA += 1
+                ID_GRACZA %= len(partia.gracze)
 
         if request.form['action'] == "KUP":
             sprzedane = partia.karta(request.form.getlist('karta', type=int))

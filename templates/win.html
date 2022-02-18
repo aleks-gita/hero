@@ -3,11 +3,18 @@
         <link rel="stylesheet" type="text/css" href='/static/style.css' />
         <title>Hero realms</title>
         <link rel="icon" href="../static/logo.png" type="image/icon type">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Gideon+Roman&display=swap" rel="stylesheet">
 	</head>
-	<body>
-    <img src="../static/logo.png" alt="logo" />
-    <div>
-        <h1>Wygrał(a): {{ partia.gracze[aktywny_gracz].nazwa }}</h1>
+	<body id="body_win">
+
+    <div id="win">
+        <h1>Wygrał: {{ partia.gracze[aktywny_gracz].nazwa }}!</h1>
+        <form action="{{url_for('index')}}" method="get">
+            <input type= "submit" name="action" value="Zagraj ponownie" class="button">
+        </form>
     </div>
+
 	</body>
 </html>

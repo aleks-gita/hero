@@ -4,36 +4,55 @@
         <link rel="stylesheet" type="text/css" href='/static/style.css' />
         <title>Hero realms</title>
         <link rel="icon" href="../static/logo.png" type="image/icon type">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Gideon+Roman&display=swap" rel="stylesheet">
     </head>
 
 	<body id="body_plansza">
     <div id="logo_plansza">
         <img src="../static/logo.png" alt="logo" width="250" height="111" />
     </div>
-	<h1>ROZGRYWA:{{partia.gracze[aktywny_gracz].nazwa}}</h1>
+	<h1 id="rozgrywa">ROZGRYWA: {{partia.gracze[aktywny_gracz].nazwa}}</h1>
 
-	<h2>GRACZE</h2>
-	<table>
-		{% for gracz in partia.gracze %}
+    <table id="tabela_zycie">
+    <tr>
+        <th>GRACZ</th>
+        <th>ŻYCIE</th>
+    </tr>
+    {% for gracz in partia.gracze %}
+        <tr>
+            <td>{{gracz.nazwa}}</td>
+            <td>{{gracz.zycie}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+	<table id="tabela">
+
 		<tr>
 			<th>Nazwa</th>
+            <!--
 			<th>Talia kart osobistych</th>
 			<th>Reka</th>
 			<th>Talia kart odrzuconych</th>
-            <th>Suma monet na rece</th>
-            <th>Suma ataku na rece</th>
+			-->
+            <th>Suma monet na ręce</th>
+            <th>Suma ataku na ręce</th>
+            <th>Życie</th>
 		</tr>
 		<tr>
-			<td>{{gracz.nazwa}}</td>
-			<td>{{gracz.talia}}</td>
-            <td>{{gracz.reka}}</td>
-			<td>{{gracz.odrzucone}}</td>
-            <td>{{gracz.monety}}</td>
-            <td>{{gracz.atak}}</td>
-            <td>zycie: {{gracz.zycie}}</td>
+			<td>{{partia.gracze[aktywny_gracz].nazwa}}</td>
+            <!--
+
+			-->
+            <td>{{partia.gracze[aktywny_gracz].monety}}</td>
+            <td>{{partia.gracze[aktywny_gracz].atak}}</td>
+            <td>zycie: {{partia.gracze[aktywny_gracz].zycie}}</td>
 		</tr>
-		{% endfor%}
+
 	</table>
+
     <div id="reka">
         {% for karta in partia.gracze[aktywny_gracz].zdjecie_wyswietl()%}
 			<td><img src="{{karta}}" alt="karta" width="100" height="139"/></td>
@@ -47,6 +66,7 @@
 			<td>{{row}}</td>
 		</tr>
 		{% endfor%}
+    <div id="przyciski">
     {% if wylozono != 1 %}
         <form action="{{url_for('plansza')}}" method="post">
             <input type= "submit" name="action" value="Wyloz karty" class="button">
@@ -55,11 +75,12 @@
 	<form action="{{url_for('plansza')}}" method="post">
 		<input type="submit" name="action" value="Zakoncz ture" class="button">
 	</form>
-	
+
 	<form action="{{url_for('cards')}}" method="get">
 		<input type="submit" name="action" value="Pokarz moje karty odrzucone" class="button">
 	</form>
-    	<table>
+    </div>
+    <div id="atakuj">
           <tr>
             <td>
             <form action="{{url_for('plansza')}}" method="post">
@@ -81,7 +102,10 @@
         {%  endif %}
         </div>
         </tr>
+
         </table>
+    </div>
+        <!--
         <table>
 		<tr>
 			<th>Sklep talia</th>
@@ -90,8 +114,10 @@
 			<td>{{partia.sklep_talia}}</td>
 		</tr>
 		<tr>
-			<th>Sklep wystawione</th>
-		</tr>
+		-->
+    <div id="atakuj">
+        <p>SKLEP</p>
+        <table>
 		<tr>
 			<form action="{{url_for('plansza')}}" method="post">
 				<td>{% for karta in partia.zdjecie_wyswietl()%}
@@ -100,6 +126,7 @@
 				{% endfor%}</td>
                 <input type="submit" name="action" value="KUP" class="button">
             </form>
+        </tr>
         <tr>
              <td>
             {% for cena in partia.cena() %}
@@ -107,7 +134,9 @@
             {% endfor %}
              </td>
         </tr>
-	</table>
+	    </table>
+    </div>>
+
 
 
 	</body>

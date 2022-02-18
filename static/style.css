@@ -1,25 +1,36 @@
 body{
-	font-family: 'Lato', sans-serif;
+	 font-family: 'Gideon Roman', cursive;
     background-color: white;
 }
 #body_start{
     background-image: url(tlo2_start.jpg);
 	background-attachment:fixed ;
     background-size:cover;
+    font-family: 'Gideon Roman', cursive;
 }
 #body_create{
-    #background-image: url(HeroRealmsWallpaper2.png);
-    background-color: black;
+    background-image: url(HeroRealmsWallpaper3.png);
+    #background-color: black;
 	background-attachment:fixed ;
     background-size:cover;
+    font-family: 'Gideon Roman', cursive;
 }
 #body_plansza{
-    background-color:#F2EDDC;
+    background-image: url(HeroRealmsWallpaper4.png);
+    color: #F2B138;
 	background-attachment:fixed ;
     background-size:cover;
+    #font-family: 'Gideon Roman', cursive;
+    font-size: 20px;
 }
 #body_karty{
-    background-color:#F2EDDC;
+    background-color: gainsboro ;
+     font-family: 'Gideon Roman', cursive;
+}
+#body_win{
+    background-image: url(HeroRealmsWallpaper3.png);
+    font-family: 'Gideon Roman', cursive;
+    color: #F2B138;
 }
 #start{
     text-align: center;
@@ -72,15 +83,16 @@ body{
         inset 0 0 .5em .25em var(--glow-color);
 }
 #form_create{
-    color: #5E9ABF;
-    border: .25em solid var(--glow-color);
+    color: darkgoldenrod;
+    background-color: rgba(0, 0, 0, 0.500);
+    #border: .25em solid;
     text-align: center;
     padding:50px;
     font-size: 30px;
     text-transform: uppercase;
     letter-spacing: 2.5px;
 	margin: 50px 400px;
-	box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
+	#box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.35);
 	border-radius: 10px;
 }
 .gracz{
@@ -88,8 +100,9 @@ body{
     border-radius: 10px;
     margin: 5px;
     padding: 5px;
-    color: #5E9ABF;
+    color: darkgoldenrod ;
     background-color: black;
+    font-family: 'Gideon Roman', cursive;
 }
 #atak{
     font-size: 30px;
@@ -108,35 +121,38 @@ input[type=number]::-webkit-outer-spin-button {
 #atak_info{
     text-align: center;
     font-size: 20px;
-    color: black;
     font-weight: bold;
     #text-transform: uppercase;
 }
 h1{
   text-align: center;
 }
-table {
+#tabela {
   width: 100%;
-  background-color: gainsboro ;
+  background-color: rgba(0, 0, 0, 0.500);
 }
+#tabela_zycie{
+    background-color: rgba(0, 0, 0, 0.500);
+    color: white;
+}
+
 td {
   text-align: center;
   vertical-align: middle;
 }
-th{
-    background-color: gainsboro ;
-}
-table th {
+
+#tabela th {
   border: 1px solid black;
 }
 .button {
+    font-family: 'Gideon Roman', cursive;
  padding: 1.3em 3em;
  font-size: 12px;
  text-transform: uppercase;
  letter-spacing: 2.5px;
  font-weight: 500;
  color: #fff;
- background-color: #000;
+ background-color: #400101;
  border: none;
  border-radius: 45px;
  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
@@ -146,8 +162,8 @@ table th {
 }
 
 .button:hover {
- background-color: #2EE59D;
- box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+ background-color: #590303;
+ box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.4);
  color: #fff;
  transform: translateY(-7px);
 }
@@ -164,7 +180,24 @@ table th {
 #karty{
     text-align: center;
 }
-
-
+#rozgrywa{
+    padding-top: 0px;
+}
+#przyciski{
+    text-align: center;
+}
+#atakuj{
+    text-align: center;
+     background-color: rgba(0, 0, 0, 0.800);
+}
+#win{
+    text-align: center;
+    padding:50px;
+    font-size: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+	margin: 50px 400px;
+    background-color: rgba(0, 0, 0, 0.800);
+}
 
 
