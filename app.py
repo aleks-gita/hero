@@ -42,6 +42,7 @@ def plansza():
             aktualny.kolor()
             aktualny.wszystkie_karty()
             aktualny.kolor_talia()
+            aktualny.hero_laczenie_dobranie()
             aktualny.sumuj_monety()
             aktualny.sumuj_atak()
             aktualny.sumuj_zdrowie()

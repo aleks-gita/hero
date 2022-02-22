@@ -58,14 +58,16 @@ class Gracz:
 
     def talia_gracz(self):
         del self.talia[:54]
+        #self.talia.append[30, 31, 44, 45, 46, 47,1,8,5,17,18]
 
     def potasuj(self):
         shuffle(self.talia)
 
     def wyloz_karty(self):
-        #self.reka= [9, 13, 36, 37, 52, 44,5, 31]
+       # self.reka= [30, 31, 44, 45, 46, 47,1,8,5,17,18]
         self.reka = self.talia[:5]
         del self.talia[:5]
+        #self.dobierz_karte()
 
     def zdjecie_wyswietl(self):
         qur2 = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
@@ -78,26 +80,6 @@ class Gracz:
         qur2 = sorted(qur2, key=lambda o: self.wszystkie.index(o.ID))
         zdjecie = ([i.Zdjecie for i in qur2])
         return zdjecie
-
-    def dobierz_karte(self):
-        qur2 = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
-        qur2 = sorted(qur2, key=lambda o: self.reka.index(o.ID))
-        zdolnosci = ([i.Inne_zdolnosci for i in qur2])
-        x = 0
-        for i in zdolnosci:
-            if i == 'Dobierz karte':
-                x += 1
-                if self.talia != []:
-                    self.reka.append(self.talia[x])
-                else:
-                    self.reka.append(self.odrzucone[x])
-
-            if i == 'Dobierz 2 karty':
-                x+=2
-                if self.talia != []:
-                    self.reka.append(self.talia[x])
-                else:
-                    self.reka.append(self.odrzucone[x])
 
     def odrzuc_karte(self):
         self.odrzucone.extend(self.talia[1])
@@ -132,7 +114,7 @@ class Gracz:
         qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
         monety = sum([i.Monety for i in qry])
         nazwy = ([i.Nazwa for i in qry])
-        self.monety = monety + 10
+        self.monety = monety +100
         return self.monety
 
     def sumuj_atak(self):
@@ -276,24 +258,53 @@ class Gracz:
         self.atak = self.atak + atak_laczenie
         self.monety = self.monety + monety_laczenie
         self.zycie = self.zycie + zdrowie_laczenie
+
+    def dobierz_karte(self):
+        qur2 = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
+        qur2 = sorted(qur2, key=lambda o: self.reka.index(o.ID))
+        zdolnosci = ([i.Inne_zdolnosci for i in qur2])
+        x = 0
+        for i in zdolnosci:
+            if i == 'Dobierz karte':
+                x+=1
+            if i == 'Dobierz 2 karty':
+                x += 2
+
+        self.reka.extend(self.talia[:x])
+        del self.talia[:x]
+        print(zdolnosci, x)
+        '''if x != 0:
+            if len(self.talia) >= x:
+                self.reka.append(self.talia[:1])
+                del self.talia[:x]
+            else:
+                self.reka.append(self.odrzucone[:2])
+                del self.talia[:x]
+        '''
+    def hero_laczenie_dobranie(self):
+        qry = session.query(hero_laczenie).filter(hero_laczenie.c.ID.in_(self.lista)).all()
+        qry = sorted(qry, key=lambda o: self.lista.index(o.ID))
+
+        zdolnosci = ([i.Inne_zdolnosci for i in qry])
+        x = 0
         x = 0
         for i in zdolnosci:
             if i == 'Dobierz karte':
                 x += 1
             if i == 'Dobierz 2 karty':
                 x += 2
-        if x !=0:
-            if self.talia != []:
-                self.reka.append(self.talia[x])
-            else:
-                self.reka.append(self.odrzucone[x])
+
+        self.reka.extend(self.talia[:x])
+        del self.talia[:x]
+        print(zdolnosci, x)
 
 
     def komputer(self):
         if len(self.talia) < 5:
             self.koniec_talii()
         self.wyloz_karty()
-        self.dobierz_karte()
+        #self.dobierz_karte()
+       # self.hero_laczenie_dobranie()
         self.kolor()
         self.wszystkie_karty()
         self.kolor_talia()
