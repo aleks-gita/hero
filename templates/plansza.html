@@ -34,36 +34,29 @@
     </div>
 
 	<table id="tabela">
- <h2>GRACZE</h2>
-		{% for gracz in partia.gracze %}
-
-
 		<tr>
 			<th>Nazwa</th>
+            <!---
 			<th>Talia kart osobistych</th>
 			<th>Reka</th>
 			<th>Talia kart odrzuconych</th>
+            --->
             <th>Suma monet na rece</th>
             <th>Suma ataku na rece</th>
 		</tr>
 		<tr>
-			<td>{{gracz.nazwa}}</td>
-			<td>{{gracz.talia}}</td>
-            <td>{{gracz.reka}}</td>
-			<td>{{gracz.odrzucone}}</td>
-            <td>{{gracz.monety}}</td>
-            <td>{{gracz.atak}}</td>
-            <td>zycie: {{gracz.zycie}}</td>
+			<td>{{partia.gracze[aktywny_gracz].nazwa}}</td>
+
+            <td>{{partia.gracze[aktywny_gracz].monety}}</td>
+            <td>{{partia.gracze[aktywny_gracz].atak}}</td>
+            <td>zycie: {{partia.gracze[aktywny_gracz].zycie}}</td>
 		</tr>
-{% endfor%}
+
 	</table>
 
     <div id="reka">
         {% for karta in partia.gracze[aktywny_gracz].zdjecie_wyswietl()%}
 			<td><img src="{{karta}}" alt="karta" width="150" height="210"/></td>
-        {% endfor %}
-        {% for kolor in partia.gracze[aktywny_gracz].kolor()%}
-        	<td>{{kolor}}</td>
         {% endfor %}
     </div>
 		{% for row in monety%}
@@ -82,7 +75,7 @@
 	</form>
 
 	<form action="{{url_for('cards')}}" method="get">
-		<input type="submit" name="action" value="Pokarz moje karty odrzucone" class="button">
+		<input type="submit" name="action" value="Pokarz moje karty" class="button">
 	</form>
     </div>
     <div id="atakuj">
@@ -131,13 +124,6 @@
 				{% endfor%}</td>
                 <input type="submit" name="action" value="KUP" class="button">
             </form>
-        </tr>
-        <tr>
-             <td>
-            {% for cena in partia.cena() %}
-                  {{cena}}
-            {% endfor %}
-             </td>
         </tr>
 	    </table>
     </div>

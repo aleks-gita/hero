@@ -48,7 +48,7 @@ class Gracz:
         self.lista = []
         self.monety = 0
         self.atak = 0
-        self.zycie = 20
+        self.zycie = 10
         self.dict = {}
         self.talia_gracz()
         self.potasuj()
@@ -114,7 +114,7 @@ class Gracz:
         qry = session.query(hero).filter(hero.c.ID.in_(self.reka)).all()
         monety = sum([i.Monety for i in qry])
         nazwy = ([i.Nazwa for i in qry])
-        self.monety = monety +100
+        self.monety = monety
         return self.monety
 
     def sumuj_atak(self):
@@ -270,9 +270,14 @@ class Gracz:
             if i == 'Dobierz 2 karty':
                 x += 2
 
-        self.reka.extend(self.talia[:x])
-        del self.talia[:x]
+        if len(self.talia) >= x+5:
+            self.reka.extend(self.talia[:x])
+            del self.talia[:x]
+        else:
+            self.reka.extend(self.odrzucone[:x])
+            del self.odrzucone[:x]
         print(zdolnosci, x)
+
         '''if x != 0:
             if len(self.talia) >= x:
                 self.reka.append(self.talia[:1])
@@ -287,27 +292,28 @@ class Gracz:
 
         zdolnosci = ([i.Inne_zdolnosci for i in qry])
         x = 0
-        x = 0
         for i in zdolnosci:
             if i == 'Dobierz karte':
                 x += 1
             if i == 'Dobierz 2 karty':
                 x += 2
-
-        self.reka.extend(self.talia[:x])
-        del self.talia[:x]
+        if len(self.talia)>= x:
+            self.reka.extend(self.talia[:x])
+            del self.talia[:x]
+        else:
+            self.reka.extend(self.odrzucone[:x])
+            del self.odrzucone[:x]
         print(zdolnosci, x)
-
 
     def komputer(self):
         if len(self.talia) < 5:
             self.koniec_talii()
         self.wyloz_karty()
-        #self.dobierz_karte()
-       # self.hero_laczenie_dobranie()
+        self.dobierz_karte()
         self.kolor()
         self.wszystkie_karty()
         self.kolor_talia()
+        self.hero_laczenie_dobranie()
         self.sumuj_monety()
         self.sumuj_atak()
         self.sumuj_zdrowie()

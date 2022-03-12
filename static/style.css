@@ -24,8 +24,12 @@ body{
     font-size: 20px;
 }
 #body_karty{
-    background-color: gainsboro ;
-     font-family: 'Gideon Roman', cursive;
+    background-image: url(HeroRealmsWallpaper4.png);
+    color: #F2B138;
+	background-attachment:fixed ;
+    background-size:cover;
+    #font-family: 'Gideon Roman', cursive;
+    font-size: 20px;
 }
 #body_win{
     background-image: url(HeroRealmsWallpaper3.png);
@@ -138,7 +142,7 @@ h1{
 #tabela_zycie{
     text-align: center;
     background-color: rgba(0, 0, 0, 0.500);
-    color: white;
+     color: #F2B138;
     padding: 15px;
 }
 td {

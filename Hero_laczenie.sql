@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 -- Struktura tabeli dla tabeli `Hero_laczenie`
 --
 
-CREATE TABLE 'Hero_laczenie' (
+CREATE TABLE Hero_laczenie (
   `ID` int(11) NOT NULL,
   `Nazwa` varchar(20) NOT NULL,
   `Monety` int(11) DEFAULT NULL,

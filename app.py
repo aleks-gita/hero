@@ -61,19 +61,18 @@ def plansza():
                     continue
                 atak = request.form.get(f'atak{i+1}', type=int)
                 slownik =partia.gracze[i].slownik(i, atak, d)
-            print("irew", slownik)
+            #print("irew", slownik)
             x = list(slownik.keys())
             if aktualny.suma(slownik) <= aktualny.atak:
-                print("JJJJ", aktualny.suma(slownik))
+                #print("JJJJ", aktualny.suma(slownik))
                 for i in x:
                     atak = request.form.get(f'atak{i + 1}', type=int)
-                    print("dla gracza, atak", i, atak)
+                    #print("dla gracza, atak", i, atak)
                     partia.gracze[i].atakuj(atak)
                 #ID_GRACZA %= len(partia.gracze)
                 aktualny.odejmij_atak(slownik)
                 for gracz in partia.gracze:
                     index = partia.gracze.index(gracz)
-                    print(index)
                     [partia.przegrane(gracz) for gracz in partia.gracze if gracz.zycie <= 0]
                     ID_GRACZA = partia.gracze.index(aktualny)
                     if len(partia.gracze) == 1:
